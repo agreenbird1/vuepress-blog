@@ -20,8 +20,8 @@ module.exports = {
       {
         text: "Vue",
         items: [
-          { text: "Vue2", link: "/vue2/" },
-          { text: "Vue3", link: "/vue3/" },
+          { text: "Vue2", link: "/vue/vue2/" },
+          { text: "Vue3", link: "/vue/vue3/" },
         ],
       },
       {
@@ -40,12 +40,11 @@ module.exports = {
         link: "/network/",
       },
       {
-        text: "操作系统",
-        link: "/os/",
-      },
-      {
-        text: "杂项",
-        items: [{ text: "测试", link: "/test/" }],
+        text: "其他",
+        items: [
+          { text: "测试", link: "/other/test/" },
+          { text: "操作系统", link: "/other/os/" },
+        ],
       },
       {
         text: "RoleTang的博客",
@@ -80,10 +79,25 @@ module.exports = {
       ],
       "/vite/": ["vite", "esbuild", "rollup"],
       "/webpack/": [{ title: "webpack基础", collapsable: true }],
-      "/test/": [
+      "/other/test/": [
         {
           title: "前端测试基础",
           children: ["jest", "vue3Test"],
+        },
+      ],
+      "/other/os/": [
+        {
+          title: "计算机操作系统",
+        },
+      ],
+      "/vue/vue2/": [
+        {
+          title: "vue2",
+        },
+      ],
+      "/vue/vue3/": [
+        {
+          title: "vue3",
         },
       ],
     },
