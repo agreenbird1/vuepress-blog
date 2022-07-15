@@ -4,7 +4,7 @@ heroImage: /avatar.png
 heroText: RoleTang的前端之路
 tagline: 惧怕未来这般苟且度日，奋力的抓住青春的尾巴
 actionText: 马上进入 →
-actionLink: /html/ei
+actionLink: /html/
 features:
 - title: 学习基础
   details: 注重于前端相关，包含了前端三件套基础、vue和其他必备知识。
