@@ -12,7 +12,7 @@ module.exports = {
       {
         text: "前端",
         items: [
-          { text: "HTML", link: "/html/ei" },
+          { text: "HTML", link: "/html/" },
           { text: "CSS", link: "/css/ei" },
           { text: "JavaScript", link: "/js/ei" },
         ],
@@ -28,16 +28,16 @@ module.exports = {
         text: "打包工具",
         items: [
           { text: "Vite", link: "/vite/vite" },
-          { text: "Webpack", link: "/webpack/webpack" },
+          { text: "Webpack", link: "/webpack/" },
         ],
       },
       {
         text: "设计模式",
-        link: "/designPattern/index",
+        link: "/designPattern/",
       },
       {
         text: "计算机网络",
-        link: "/network/index",
+        link: "/network/",
       },
       {
         text: "操作系统",
@@ -45,7 +45,7 @@ module.exports = {
       },
       {
         text: "杂项",
-        items: [{ text: "测试", link: "/test/basic" }],
+        items: [{ text: "测试", link: "/test/" }],
       },
       {
         text: "RoleTang的博客",
@@ -59,9 +59,33 @@ module.exports = {
     sidebar: {
       "/css/": ["ei", "engineering"],
       "/js/": ["ei", "axios", "perf"],
-      "/network/": ["translayer", "applayer", "Http", "websocket"],
-      "/designPattern/": ["single", "pubsub", "strategy"],
+      "/html/": [
+        {
+          title: "HTML",
+        },
+      ],
+      "/network/": [
+        {
+          title: "计算机网络基础",
+          collapsable: true,
+          children: ["translayer", "applayer", "Http", "websocket"],
+        },
+      ],
+      "/designPattern/": [
+        {
+          title: "设计模式概览",
+          collapsable: true,
+          children: ["single", "pubsub", "strategy"],
+        },
+      ],
       "/vite/": ["vite", "esbuild", "rollup"],
+      "/webpack/": [{ title: "webpack基础", collapsable: true }],
+      "/test/": [
+        {
+          title: "前端测试基础",
+          children: ["jest", "vue3Test"],
+        },
+      ],
     },
     plugins: ["vuepress-plugin-serve"],
   },
