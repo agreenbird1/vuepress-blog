@@ -4,6 +4,7 @@ module.exports = {
   theme: "reco",
   head: [["link", { rel: "icon", href: "favicon.ico" }]], // 配置 favicon
   themeConfig: {
+    sidebarDepth: 2,
     nav: [
       {
         text: "首页",
@@ -44,6 +45,7 @@ module.exports = {
         items: [
           { text: "测试", link: "/other/test/" },
           { text: "操作系统", link: "/other/os/" },
+          { text: "性能优化", link: "/other/perf/" },
         ],
       },
       {
@@ -79,12 +81,7 @@ module.exports = {
       ],
       "/vite/": ["vite", "esbuild", "rollup"],
       "/webpack/": [{ title: "webpack基础", collapsable: true }],
-      "/other/test/": [
-        {
-          title: "前端测试基础",
-          children: ["jest", "vue3Test"],
-        },
-      ],
+      "/other/test/": ["", "jest", "vue3Test"],
       "/other/os/": [
         {
           title: "计算机操作系统",
@@ -98,6 +95,12 @@ module.exports = {
       "/vue/vue3/": [
         {
           title: "vue3",
+        },
+      ],
+      "/other/perf/": [
+        {
+          title: "性能优化",
+          collapsable: false
         },
       ],
     },
