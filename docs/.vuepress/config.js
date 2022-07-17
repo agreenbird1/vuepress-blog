@@ -76,7 +76,7 @@ module.exports = {
         {
           title: "设计模式概览",
           collapsable: true,
-          children: ["single", "pubsub", "strategy","proxy","iterator"],
+          children: ["single", "pubsub", "strategy","proxy","iterator","command"],
         },
       ],
       "/vite/": ["vite", "esbuild", "rollup"],
