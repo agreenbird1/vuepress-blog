@@ -46,6 +46,7 @@ module.exports = {
           { text: "测试", link: "/other/test/" },
           { text: "操作系统", link: "/other/os/" },
           { text: "性能优化", link: "/other/perf/" },
+          { text: "面经", link: "/other/eis/juexiao" },
         ],
       },
       {
@@ -103,6 +104,12 @@ module.exports = {
           collapsable: false
         },
       ],
+      "/other/eis/":[
+        {
+          title:"暑假实习面经",
+          children:["juexiao","dianjiang"]
+        }
+      ]
     },
     plugins: ["vuepress-plugin-serve"],
   },
