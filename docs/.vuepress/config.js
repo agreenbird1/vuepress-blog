@@ -4,7 +4,7 @@ module.exports = {
   theme: "reco",
   head: [["link", { rel: "icon", href: "favicon.ico" }]], // 配置 favicon
   themeConfig: {
-    sidebarDepth: 2,
+    sidebar: 'auto',
     nav: [
       {
         text: "首页",
@@ -107,7 +107,10 @@ module.exports = {
       "/other/eis/":[
         {
           title:"暑假实习面经",
-          children:["juexiao","dianjiang"]
+          children:["juexiao","dianjiang","lenovo","jinshanyun"]
+        },
+        {
+          title:"2023秋招面经"
         }
       ]
     },
