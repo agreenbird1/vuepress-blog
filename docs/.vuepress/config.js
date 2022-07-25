@@ -12,7 +12,10 @@ module.exports = {
       },
       {
         text: '前端',
-        items: [{ text: '前端三件套', link: '/total/html/' }],
+        items: [
+          { text: '前端三件套', link: '/total/basic/html/' },
+          { text: 'nodejs', link: '/total/node/' },
+        ],
       },
       {
         text: 'Vue',
@@ -21,24 +24,27 @@ module.exports = {
       {
         text: '打包工具',
         items: [
-          { text: 'Vite', link: '/vite/vite' },
-          { text: 'Webpack', link: '/webpack/' },
+          { text: 'Vite', link: '/packtools/vite/vite' },
+          { text: 'Webpack', link: '/packtools/webpack/' },
         ],
       },
       {
-        text: '设计模式',
-        link: '/designPattern/',
+        text: '浏览器',
+        link: '/browser/',
       },
       {
-        text: '计算机网络',
-        link: '/network/',
+        text: '计算机基础',
+        items: [
+          { text: '计算机网络', link: '/computer/network/' },
+          { text: '操作系统', link: '/computer/os/' },
+        ],
       },
       {
         text: '其他',
         items: [
           { text: '测试', link: '/other/test/' },
-          { text: '操作系统', link: '/other/os/' },
           { text: '性能优化', link: '/other/perf/' },
+          { text: '设计模式', link: '/other/designPattern/' },
           { text: '面经', link: '/other/eis/juexiao' },
         ],
       },
@@ -50,11 +56,9 @@ module.exports = {
           { text: '掘金', link: 'https://juejin.cn/user/2085101550187517' },
         ],
       },
-      { text: 'CSS', link: '/css/ei' },
-      { text: 'JavaScript', link: '/js/ei' },
     ],
     sidebar: {
-      '/total/': [
+      '/total/basic/': [
         {
           title: 'HTML',
           collapsable: false, // 可选的, 默认值是 true,
@@ -91,18 +95,19 @@ module.exports = {
           children: ['other'],
         },
       ],
-      '/network/': [
+      '/computer/network/': [
         {
           title: '计算机网络基础',
           collapsable: true,
           children: ['translayer', 'applayer', 'Http', 'websocket'],
         },
       ],
-      '/designPattern/': [
+      '/other/designPattern/': [
         {
           title: '设计模式概览',
           collapsable: true,
           children: [
+            '',
             'single',
             'pubsub',
             'strategy',
@@ -112,11 +117,11 @@ module.exports = {
           ],
         },
       ],
-      '/vite/': ['vite', 'esbuild', 'rollup'],
-      '/webpack/': [{ title: 'webpack基础', collapsable: true }],
+      '/packtools/vite/': ['vite', 'esbuild', 'rollup'],
+      '/packtools/webpack/': [{ title: 'webpack基础', collapsable: true }],
       '/other/test/': ['', 'jest', 'vue3Test'],
       '/vue/': ['', 'designVue'],
-      '/other/os/': [
+      '/computer/os/': [
         {
           title: '计算机操作系统',
         },
@@ -146,6 +151,7 @@ module.exports = {
           title: '2023秋招面经',
         },
       ],
+      '/total/node/': ['', 'ei'],
     },
     plugins: ['vuepress-plugin-serve'],
   },
