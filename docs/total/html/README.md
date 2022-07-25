@@ -4,7 +4,7 @@ author: RoleTang
 date: '2022-04-12'
 ---
 
-1. itle与h1的区别、b与strong的区别、i与em的区别？
+1. title与h1的区别、b与strong的区别、i与em的区别？
 
    - title属性没有明确意义只表示是个标题（也是head标签中唯一不可或缺的标签），H1则表示层次明确的标题，对页面信息的抓取有很大的影响
    - strong标签有语义，是起到加重语气的效果（搜索引擎更侧重），而b标签是没有的，b标签只是一个简单加粗标签。
@@ -188,3 +188,124 @@ date: '2022-04-12'
 
     - `src`：把资源下载到页面中使**浏览器解析**的方式 ，会阻塞文档。同时下载的资源会嵌入到`src`的位置。
     - `href` 是超文本引用，它指向资源的位置，建立与目标文件之间的联系）
+
+17. DOM(0~2)级事件分别有哪些
+
+`DOM0`:将一个函数赋值给一个事件处理程序属性
+
+包括：onclick、onmouseover、onmouseout等
+
+`DOM2`：包括addEventListener、removeEventListener
+
+18. opacity、display、visibility
+
+opacity：透明度，设置为0仍然占用空间，可以响应绑定的事件。
+
+display: none; 元素不展示，不占用空间，会触发回流，不会响应绑定的事件。
+
+visibility：元素隐藏，占用空间，触发重绘，不会响应绑定的事件。
+
+19. 一个网页，发起HTTP请求有多少种方式
+
+link
+
+href
+
+src
+
+background
+
+与后台交互
+
+form
+
+jsonp
+
+a
+
+等标签
+
+20. 伪类和伪元素，区别
+
+`伪类`：是添加到选择器的关键字，指定要选择的元素的特殊状态，比如hover，last-child。
+
+`伪元素`：伪元素为DOM树没有定义的虚拟元素。
+
+根本区别是`伪元素`会新创建一个元素，不是存在在DOM文档上的
+
+21. 页面跳转的几种方式
+
+    1. `window.location.href="http://www.dayanmei.com/";`
+    2. `window.navigate("top.jsp");//仅支持ie`
+    3. `window.location.replace("http://www.dayanmei.com");`
+    4. `window.history、back、go(-1);`
+
+22. 如何禁止页面缩放
+
+对document添加事件
+
+    1. wheel事件，判断是否在滑动且是否同时按下了ctrl键，此时禁止默认事件
+    2. keydown事件，判断是否按下了ctrl键和+/-键来禁止默认事件
+
+需要注意addEventListener第三个参数需要设置passive为false，因为passive默认为true，此时代表listener永远不会阻止默认事件！！！
+
+23. 上传文件，ajax上传文件
+
+   使用input框上传文件，同时设置type属性为file。当然可以选择多文件上传，即添加multiply属性。
+
+   然后可以使用input.files获取当前的文件，并封装进formData对象中进行发送。
+
+   [FormData ](https://developer.mozilla.org/zh-CN/docs/Web/API/FormData)
+
+   ```js
+   // ajax
+   const req = new XMLHttpRequest()
+   const formData = new FormData()
+   formData.set('file', input.files[0])
+   req.open(method, url)
+   req.send(formData)
+   ```
+
+24. grid布局
+
+常用属性：
+
+grid-template-columns
+
+grid-template-rows
+
+grid-template-areas
+
+grid-column/row-gap
+
+子元素：grid-area
+
+25. BOM
+
+`window`：BOM的核心对象是window，即是浏览器窗口的一个接口，又是全局对象。
+
+`location`：表示当前的url地址。
+
+`navigator`：主要用来获取浏览器的属性，区分浏览器类型。
+
+`history`: 主要用来操作浏览器`URL（会话）`的历史记录
+
+26. 如何获取滚动条的百分比
+
+以body为例
+
+可以获取整个内容的高度：`body.clientHeight`
+
+然后获取屏幕的高度：`screen.heighth`
+
+再获取卷曲的高度：`body.scrollTop`
+
+百分比 = ` body.scrollTop / (body.clientHeight - screen.heighth)`
+
+27. 哪些事件不支持冒泡
+
+![image](/js/不支持冒泡.png)
+
+28. 跨站？
+
+[理解“同站”和“同源” (web.dev)](https://web.dev/same-site-same-origin/#same-site-cross-site)

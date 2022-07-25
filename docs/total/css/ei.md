@@ -392,4 +392,12 @@ date: '2022-04-12'
 
     ```
 
-###
+24. css可以继承的属性
+
+font系列：font-size、font-weight、font-style等
+
+text系列:   text-align line-height等
+
+25. css动画
+
+@keyframes和animation配合使用

@@ -181,7 +181,7 @@ date: '2022-04-12'
 
 15. 数据结构
 
-    ![image-20220314162839915](C:\Users\86176\AppData\Roaming\Typora\typora-user-images\image-20220314162839915.png)
+    ![image-20220314162839915](/js/数据结构.png)
 
 16. 事件委托
 
@@ -1265,5 +1265,196 @@ date: '2022-04-12'
     // promise
     // async1 end
     ```
+63. 块作用域
 
-###
+   块是指被大括号("{}")包裹住的相关联的statements的集合
+
+   比如if语句、for循环语句
+
+64. for in 、传统 for 循环、forEach 有什么区别
+
+   传统for循环就是根据数组的下标对元素进行一个获取
+
+   for in 循环就是迭代对象的`可枚举`属性，包括原型链上的
+
+   for of循环在可迭代对象上迭代
+
+   forEach是数组、map等使元素依次执行依次回调函数，且不可使用continue、break等关键字（使用了则直接报错）
+
+65. super
+
+super关键字将单独出现，并且必须在使用this关键字之前使用
+
+66. web worker
+
+简单使用
+
+`worker`中没有`window`对象，取而代之的`self`对象。说明不能直接操作`dom`节点，也不能使用`window`对象的默认方法和属性。
+
+同时创建worker者可以使用`terminate`方法关闭worker
+
+或者worker本身使用close方法进行自关闭
+
+```javascript
+// 创建一个worker
+// 指定一个脚本文件执行worker线程
+const worker = new Worker('./21_worker.js')
+setTimeout(() => {
+    worker.postMessage('hello my worker')
+    worker.terminate() // 创建者关闭
+}, 2000)
+
+
+// worker.js
+onmessage = function(e){
+  console.log('got some info, ' + e.data)
+}
+close() // 自关闭
+```
+
+67. setTimeout和setInterval
+
+这两个方法的最小调用间隔时间是4ms。所以最小延时是4ms。
+
+再加之其是加入宏任务队列，可能会产生误差
+
+68. js为什么是单线程的以及其好处
+
+因为js的主要用途是与用户进行一些简单的交互、以及操作Dom。但是如果使用多线程的话，可能会造成复杂的同步问题。比如`多个线程同时操作同一个dom的情况`等复杂的问题。
+
+好处：
+
+- 单线程就一个线程在玩，省去了线程间切换的开销
+- 还有线程同步的问题，线程冲突的问题的也不需要担心
+
+69. let声明的变量存储在哪里？
+
+存储在一个块级作用域中，并未挂载在Window上
+![image](/js/let作用域.png)
+
+70. 浏览器不同标签页面通信？同源、跨域情况下？
+
+同源：
+
+- Broadcast Channel
+
+  ```javascript
+  // 在两个页面同时声明同一个channel
+  const bc = new BroadcastChannel('tqt')
+  // 分别发送和监听事件即可
+  bc.postmessage('hello i am tqt')
+  //另一个页面
+  bc.onmessage = e => { console.log(e.data) } // e.data:hello i am tqt
+  ```
+
+- postmessage
+
+  通过window.open打开的窗口可以拿到被打开窗口的window对象。然后可以通过window上的postmessage方法传递消息。
+
+  被打开的窗口可以通过onmessage接收消息，并接收到对方的window对象。
+
+  此时就可以互相发送消息。
+
+非同源：
+
+- iframe ：使用一个用户不可见的 iframe 作为“桥”。
+
+71. jsonp详解
+
+`JSONP`为民间提出的一种跨域解决方案，通过客户端的script标签发出的请求方式。
+
+因为同源策略的限制，当客户端向服务器端请求数据后，服务器也会返回数据。但是浏览器在接收到数据之后会检查是否同源，不是会丢弃掉。
+
+但是`jsonp`通过`script`标签，通过标签发出的请求不会被检查。
+
+步骤
+
+    1. 客户端首先声明一个接收数据的全局函数
+    2. 客户端解析到外联的`script`标签，发送请求
+    3. 服务器收到请求，返回函数的调用
+    4. 客户端收到数据，执行回调获得数据
+
+jsonp是一个同步请求，不存在同源检查，且只支持get请求。
+
+72. 同源策略的意义
+
+是一个重要的安全策略，它用于限制一个`orgin`的文档或者它加载的脚本如何能与另一个源的资源进行交互。它能帮助阻隔恶意文档，减少可能被攻击的媒介。
+
+比如：如果iframe能够跨域。嵌套一个iframe指向一个银行网站，如果没有跨域。那么用户的访问和操作，除了域名，其他的部分没有任何区别，用户的安全也得不到保证。
+
+73. 箭头函数中的this为什么这么设计？
+
+就是为了直接能够获得外部函数的this。而不需要写
+
+类似这样的代码  ``_self = this``
+
+74. symbol（如何叙述？功能？）
+
+   es7新增，是基本的数据类型
+
+   表示一个唯一的标识符，即使我们创建了具有相同描述的symbol，它们的值也是不同的。
+
+   同时它可以用作对象的键，它是不可以被迭代到的。
+
+75. class 中的extends继承
+
+   底层仍然是寄生组合式继承
+
+76. null和undefined的区别
+
+首先，null和undefined都是js的基本数据类型。
+
+null是一个字面量，它代表当前变量未指向任何值，可以理解为尚未创建的对象。
+
+undefined是一个全局对象的属性，指当前变量还未定义
+
+怎么区分？
+
+使用`typeof`区分
+
+`Object.prototype.toString.call()`
+
+77. 事件委托
+
+通过target（触发），currentTarget（绑定）判断
+
+ev.target || ev.srcElement（兼容）
+
+78. == 和 === 的区别
+
+`==`在比较时候会进行`隐式转换`，然后再比较
+
+`隐式转换详解`：
+
+- 如果两个操作数都是对象，则仅当两个操作数都引用同一个对象时才返回`true`。
+- 如果一个操作数是`null`，另一个操作数是`undefined`，则返回`true`。
+- 如果两个操作数是不同类型的，就会尝试在比较之前将它们转换为相同类型：
+  - 当**数字与字符串**进行比较时，会尝试将字符串转换为数字值。
+  - 如果操作数之一是**Boolean**，则将布尔操作数转换为1或0。
+    - 如果是`true`，则转换为`1`。
+    - 如果是 `false`，则转换为`0`。
+  - 如果操作数之一**是对象**，另一个是数字或字符串，会尝试使用对象的`valueOf()`和`toString()`方法将对象转换为原始值。
+- 如果操作数具有相同的类型，则将它们进行如下比较：
+  - `String`：`true`仅当两个操作数具有相同顺序的相同字符时才返回。
+  - `Number`：`true`仅当两个操作数具有相同的值时才返回。`+0`并被`-0`视为相同的值。如果任一操作数为`NaN`，则返回`false`。
+  - `Boolean`：`true`仅当操作数为两个`true`或两个`false`时才返回`true`。
+
+`===`是严格比较，包括类型和值，即不会进行隐式转换。
+
+79. map和对象的区别
+
+    1. map可以使用任意值为键，对象只可以使用字符串和symbol作键
+    2. map是一个可迭代对象，而对象不是
+    3. 使用方法的区别，map使用set、clear、has等方法，拥有size等属性。
+
+80. 为什么`typeof NaN === 'number'`
+
+`NaN`：not a number
+
+就是计算机科学中数值数据类型的一类型值。
+
+如何得到NaN
+
+    1. 以NaN为操作数
+    2. 0/0的除法
+    3. 负数的平方根
