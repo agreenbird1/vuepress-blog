@@ -16,10 +16,7 @@ module.exports = {
       },
       {
         text: 'Vue',
-        items: [
-          { text: 'Vue2', link: '/vue/vue2/' },
-          { text: 'Vue3', link: '/vue/vue3/' },
-        ],
+        link: '/vue/',
       },
       {
         text: '打包工具',
@@ -91,7 +88,7 @@ module.exports = {
         {
           title: '其他常见',
           collapsable: false,
-          children: ["other"]
+          children: ['other'],
         },
       ],
       '/network/': [
@@ -118,6 +115,7 @@ module.exports = {
       '/vite/': ['vite', 'esbuild', 'rollup'],
       '/webpack/': [{ title: 'webpack基础', collapsable: true }],
       '/other/test/': ['', 'jest', 'vue3Test'],
+      '/vue/': ['', 'designVue'],
       '/other/os/': [
         {
           title: '计算机操作系统',
