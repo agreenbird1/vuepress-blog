@@ -30,7 +30,8 @@ module.exports = {
       },
       {
         text: '浏览器',
-        link: '/browser/',
+        link: '/browser/ei',
+
       },
       {
         text: '计算机基础',
@@ -152,6 +153,13 @@ module.exports = {
         },
       ],
       '/total/node/': ['', 'ei'],
+      '/browser/': [
+        {
+          title: '浏览器基础',
+          collapsable: false,
+          children: ['ei', 'basic', 'cache'],
+        },
+      ],
     },
     plugins: ['vuepress-plugin-serve'],
   },
