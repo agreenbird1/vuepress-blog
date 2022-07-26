@@ -31,7 +31,6 @@ module.exports = {
       {
         text: '浏览器',
         link: '/browser/ei',
-
       },
       {
         text: '计算机基础',
@@ -47,6 +46,7 @@ module.exports = {
           { text: '性能优化', link: '/other/perf/' },
           { text: '设计模式', link: '/other/designPattern/' },
           { text: '面经', link: '/other/eis/juexiao' },
+          { text: '项目', link: '/other/projects/errabbit/' },
         ],
       },
       {
@@ -158,6 +158,13 @@ module.exports = {
           title: '浏览器基础',
           collapsable: false,
           children: ['ei', 'basic', 'cache'],
+        },
+      ],
+      '/other/projects/errabbit/': [
+        {
+          title: '小兔鲜儿',
+          collapsable: false,
+          children: ['', 'implement', 'questions'],
         },
       ],
     },
