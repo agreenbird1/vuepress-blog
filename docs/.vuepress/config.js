@@ -50,7 +50,17 @@ module.exports = {
         ],
       },
       {
-        text: 'RoleTang的博客',
+        text: '精读系列',
+        items: [
+          { text: 'vuejs设计与实现', link: '/read/vuejs/artweigh' },
+          {
+            text: 'JavaScript设计模式与开发实践',
+            link: '/read/designPattern/',
+          },
+        ],
+      },
+      {
+        text: '随便看看',
         items: [
           { text: 'gitee', link: 'https://gitee.com/tqt_greenhand' },
           { text: 'github', link: 'https://github.com/agreenbird1' },
@@ -103,21 +113,6 @@ module.exports = {
           children: ['translayer', 'applayer', 'Http', 'websocket'],
         },
       ],
-      '/other/designPattern/': [
-        {
-          title: '设计模式概览',
-          collapsable: true,
-          children: [
-            '',
-            'single',
-            'pubsub',
-            'strategy',
-            'proxy',
-            'iterator',
-            'command',
-          ],
-        },
-      ],
       '/packtools/vite/': ['vite', 'esbuild', 'rollup'],
       '/packtools/webpack/': [{ title: 'webpack基础', collapsable: true }],
       '/other/test/': ['', 'jest', 'vue3Test'],
@@ -165,6 +160,28 @@ module.exports = {
           title: '小兔鲜儿',
           collapsable: false,
           children: ['', 'implement', 'questions'],
+        },
+      ],
+      '/read/vuejs/': [
+        {
+          title: 'vuejs设计与实现',
+          collapsable: false,
+          children: ['artweigh', 'core'],
+        },
+      ],
+      '/read/designPattern/': [
+        {
+          title: '设计模式概览',
+          collapsable: false,
+          children: [
+            '',
+            'single',
+            'pubsub',
+            'strategy',
+            'proxy',
+            'iterator',
+            'command',
+          ],
         },
       ],
     },
