@@ -44,7 +44,6 @@ module.exports = {
         items: [
           { text: '测试', link: '/other/test/' },
           { text: '性能优化', link: '/other/perf/' },
-          { text: '设计模式', link: '/other/designPattern/' },
           { text: '面经', link: '/other/eis/juexiao' },
           { text: '项目', link: '/other/projects/errabbit/' },
         ],
@@ -166,7 +165,7 @@ module.exports = {
         {
           title: 'vuejs设计与实现',
           collapsable: false,
-          children: ['artweigh', 'core'],
+          children: ['artweigh', 'core','design'],
         },
       ],
       '/read/designPattern/': [
