@@ -24,6 +24,9 @@ date: '2022-04-12'
 
    **Service worker**
 
+    Service workers 本质上充当 Web 应用程序、浏览器与网络（可用时）之间的代理服务器。这个 API 旨在创建有效的离线体验，它会拦截网络请求并根据网络是否可用来采取适当的动作、更新来自服务器的的资源。它还提供入口以推送通知和访问后台同步 API。
+    Service worker 运行在 worker 上下文，因此它不能访问 DOM。相对于驱动应用的主 JavaScript 线程，它运行在其他线程中，所以不会造成阻塞。它设计为完全异步，同步 API（如XHR和localStorage (en-US)）不能在 service worker 中使用。
+
    `三要素`
 
    ![PWA配置三要素.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5a05af63d9184c9d8c1a1abd644d107b~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp?)
@@ -36,7 +39,9 @@ date: '2022-04-12'
 
    用于加载外部资源。
 
-   通常用于加载css样式表
+   通常用于加载`css`样式表
+
+   vite中对打包的资源都会使用`link`标签加载，js'文件就会添加对应的`moduelpreload`属性。
 
    `<link rel="stylesheet" href="./index.css">`
 
@@ -211,7 +216,7 @@ link
 
 href
 
-src
+拥有src属性的标签，script、video、audio、img
 
 background
 
@@ -307,5 +312,11 @@ grid-column/row-gap
 ![image](/js/不支持冒泡.png)
 
 28. 跨站？
+
+同站
+
+顶级域名 + 二级域名一致 = 同站。
+
+与协议、端口号等无关。
 
 [理解“同站”和“同源” (web.dev)](https://web.dev/same-site-same-origin/#same-site-cross-site)
