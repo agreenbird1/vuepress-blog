@@ -47,6 +47,13 @@ date: '2022-04-12'
 
 6. 执行上下文（后被称作词法环境）
 
+   三种情况：
+   1. 全局上下文是为运行代码主体而创建的执行上下文，也就是说它是为那些存在于 JavaScript 函数之外的任何代码而创建的。
+   2. 每个函数会在执行的时候创建自己的执行上下文。这个上下文就是通常说的 “本地上下文”。
+   3. 使用 eval() 函数也会创建一个新的执行上下文。
+
+   每一个上下文在本质上都是一种作用域层级。
+
    函数的上下文决定了他们可以访问到哪些数据，以及他们的行为。每个上下文都有一个关联的变量对象（VO），而这个上下文中定义的所有函数和变量都会保存在这个VO上。
 
    全局上下文是最外层的上下文，浏览器中是`window`对象，而`nodejs`中是`global`，因此，通过`var`定义的变量都会保存在`window`上。
@@ -118,6 +125,8 @@ date: '2022-04-12'
 
 9. 如何实现一个LRUCache？
 
+   https://leetcode.cn/problems/lru-cache/
+
    LRU：最近最少使用
 
    利用map的特性
@@ -132,7 +141,7 @@ date: '2022-04-12'
 
 10. JSON.stringify
 
-    对其中的 `undefined`，`function` 将在 `JSON.stringify` 时会忽略掉
+    对其中的 `undefined`，`function` 将在 `JSON.stringify` 时会忽略掉，而不会管这个函数中是否有真正的值。
 
     但是如果`getter`的有具体的返回值，则会使用返回值
 
@@ -171,7 +180,7 @@ date: '2022-04-12'
 
     它的执行代码其实更类似与在try catch中执行的，遇见错误会向后抛出，
 
-    因为代码在then方法中执行时会捕获错误，且又会返回一个新的promise，而新的promise的状态又根据之前的状态决定，同时默认的*onRejected*方法会接收之前状态为rejected的promise抛出的错误。当有错误的时候会调用rejected方法向下一层抛出，一直到被catch捕获
+    Promise 对象的错误具有“冒泡”性质，会一直向后传递，直到被捕获为止。
 
 14. 实现类的私有变量
 
@@ -195,6 +204,8 @@ date: '2022-04-12'
 
 17. 暂时性死区
 
+    当程序的控制流程在新的作用域（module function 或 block 作用域）进行实例化时，在此作用域中用let/const声明的变量会先在作用域中被创建出来，但因此时还未进行词法绑定，所以是不能被访问的，如果访问就会抛出错误。因此，在这运行流程进入作用域创建变量，到变量可以被访问之间的这一段时间，就称之为暂时死区。
+
     当在两个作用域当中，使用let关键字定义了一个变量，若是在声明之前进行访问便会报错。因为let的存在形成了一个封闭的作用域相当于
 
     ```javascript
@@ -205,37 +216,7 @@ date: '2022-04-12'
     }
     ```
 
-18. dom转json
-
-    ```javascript
-    function convertToJson() {
-        const root = document.getElementsByClassName('root')[0];
-        const output = new Object();
-        // 只需要这两个标签即可
-        output.tagName = root.tagName;
-        output.className = root.className;
-        output.childs = getChilds(root);
-        // 此方法非常快速
-        console.log(JSON.stringify(output));
-    }
-
-    function getChilds(node) {
-        const childs = node.children;
-        const result = new Array();
-        if(!childs || childs.length === 0) return result;
-        for (const child of childs) {
-            const childOutput = new Object();
-            childOutput.tagName = child.tagName;
-            childOutput.className = child.className;
-            childOutput.childs = getChilds(child);
-            result.push(childOutput);
-        }
-        return result;
-    }
-    convertToJson();
-    ```
-
-19. js事件
+18. js事件
 
     - 事件流
 
@@ -247,7 +228,9 @@ date: '2022-04-12'
 
     - 事件类型包括很多：鼠标事件、输入事件、滚轮事件、键盘事件等
 
-20. MutationObserver （异步）
+19. MutationObserver （异步）
+
+    https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver
 
     MutationObserver 接口提供了监视对DOM树所做更改的能力,它也是一个构造器，接受一个 callback 参数，用来处理节点变化的回调函数，callback 接收两个参数：
 
@@ -266,17 +249,17 @@ date: '2022-04-12'
 
     subtree：设置为 true，目标以及目标的后代改变都会观察
 
-21. ??\?.\\&&\\||
+20. ??=、 ?.、  &&=、  ||=
 
-    ??= (逻辑空赋值 ): 只有赋值左边为null和undefined时候才生效
+    ??=(逻辑空赋值): 只有赋值左边为null和undefined时候才生效
 
     ?. : 可选链操作符号。允许读取位于连接对象链深处的属性的值，而不必明确验证链中的每个引用是否有效。可以为null和undefined，此时该表达式短路返回值是 `undefined`。
 
-    && :只有左边为真才会返回右边的结果，否则返回左边的结果
+    &&=(逻辑与赋值):只有左边为真才会返回右边的结果，否则返回左边的结果
 
-    || :若左边为真，返回左边的结果，否则返回右边的结果
+    ||=(逻辑或赋值):若左边为真，返回左边的结果，否则返回右边的结果。仅当左边为`falsy`值（认定转换为false）的时候赋值。
 
-22. 模块化、工程化
+21. 模块化、工程化
 
     模块是能够单独命名并独立地完成一定功能的程序语句的**集合**，通过模块化我们能够更好的
 
@@ -285,9 +268,9 @@ date: '2022-04-12'
     3. 代码复用
     4. 代码管理
 
-    常用的模块化：
-
     `你不知道的JavaScript`：模块有两个主要特征：（1）为创建内部作用域而调用了一个包装函数；（2）包装函数的返回 值必须至少包括一个对内部函数的引用，这样就会创建涵盖整个包装函数内部作用域的 闭包
+
+    常用的模块化：
 
     - CommonJS
 
@@ -302,9 +285,9 @@ date: '2022-04-12'
     - 两者的区别
 
       2.  CommonJS 加载的是一个对象（即`module.exports`属性），该对象只有在脚本运行完才会生成（**运行时加载**）。而 ES6 模块不是对象，它的对外接口只是一种静态定义，在代码静态解析阶段就会生成（**编译时加载**）。
-      3.  Commonjs导出的是一个对象，是对象的浅拷贝。而esm导出的是变量的引用（引用列表，使用的module environment record，实施的是动态绑定，绑定引用）
+      3.  Commonjs导出的是一个对象，是module.exports。而esm导出的是变量的引用（引用列表，使用的module environment record，实施的是动态绑定，绑定引用）
 
-23. Obejct.defineProperty
+22. Obejct.defineProperty
 
     `Object.defineProperty()` 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象
 
@@ -336,6 +319,16 @@ date: '2022-04-12'
     - setter  // 存取描述符
 
      存取描述符和属性描述符不能共存
+
+23. typeof
+
+    能够快速区分基本数据类型，但是不能够区分null、array和object
+
+    ```javascript
+    typeof null === 'object'
+    typeof new Array === 'object'
+    typeof new Object === 'object'
+    ```
 
 24. es6 - es12 新语法。
 
@@ -501,19 +494,25 @@ date: '2022-04-12'
 
     1. 原型链继承
 
-       子类的构造函数原型指向父类的实例
+       将子类的原型链指向父类的对象实例
 
-       缺点：多个子类公用实例，不能向父级构造函数传参
+       `Chile.prototype = new Parent();`
+
+       缺点：多个子类公用父类实例，不能向父级构造函数传参，且一个变化其余的都会变化。
 
     2. 构造函数继承
 
        使用apply方法在子类中调用父类并绑定自身this，可以共有父类属性
 
-       缺点： 不能使用父类原型的方法
+       `Parent.call(this, name, id);`
+
+       缺点： 不能使用父类原型的方法，构造函数不可复用
 
     3. 组合式继承
 
        前两个结合在一起
+
+       缺点：会执行两次父类的构造函数，消耗较大内存，子类的构造函数会代替原型上的那个父类构造函数
 
     4. 原型式继承
 
@@ -530,7 +529,26 @@ date: '2022-04-12'
 
        ```
 
-    5. 寄生组合式继承
+    5. 寄生式继承
+
+    原理：二次封装原型式继承，并拓展
+
+      ```javascript
+       function createObject(obj) {
+        var o = copy(obj);
+        o.getNames = function() {
+          console.log(this.names);
+          return this.names;
+        }
+        return o;
+      }
+
+       ```
+    优点：可添加新的属性和方法
+
+    6. 寄生组合式继承
+
+      将组合继承中的盗用原型链的方法改为原型式继承
 
        ```javascript
        function copy(object) {
@@ -567,382 +585,50 @@ date: '2022-04-12'
 
        ```
 
+38. == 和 === 的区别
+
+`==`在比较时候会进行`隐式转换`，然后再比较
+
+`隐式转换详解`：
+
+- 如果两个操作数都是对象，则仅当两个操作数都引用同一个对象时才返回`true`。
+- 如果一个操作数是`null`，另一个操作数是`undefined`，则返回`true`。
+- 如果两个操作数是不同类型的，就会尝试在比较之前将它们转换为相同类型：
+  - 当**数字与字符串**进行比较时，会尝试将字符串转换为数字值。
+  - 如果操作数之一是**Boolean**，则将布尔操作数转换为1或0。
+    - 如果是`true`，则转换为`1`。
+    - 如果是 `false`，则转换为`0`。
+  - 如果操作数之一**是对象**，另一个是数字或字符串，会尝试使用对象的`valueOf()`和`toString()`方法将对象转换为原始值。
+- 如果操作数具有相同的类型，则将它们进行如下比较：
+  - `String`：`true`仅当两个操作数具有相同顺序的相同字符时才返回。
+  - `Number`：`true`仅当两个操作数具有相同的值时才返回。`+0`并被`-0`视为相同的值。如果任一操作数为`NaN`，则返回`false`。
+  - `Boolean`：`true`仅当操作数为两个`true`或两个`false`时才返回`true`。
+
+`===`是严格比较，包括类型和值，即不会进行隐式转换。
+
+39. map和对象的区别
+
+    1. map可以使用任意值为键，对象只可以使用字符串和symbol作键
+    2. map是一个可迭代对象，而对象不是
+    3. 使用方法的区别，map使用set、clear、has等方法，拥有size等属性。
+
+40. 为什么`typeof NaN === 'number'`
+
+`NaN`：not a number
+
+就是计算机科学中数值数据类型的一类型值。
+
+如何得到NaN
+
+    1. 以NaN为操作数
+    2. 0/0的除法
+    3. 负数的平方根
 
 
-38. 手写函数柯里化
-
-    ```javascript
-    function rtCurrying(fn) {
-        return function curried(...args) {
-        	// 1.判断参数是否已经全部传递
-            if (args.length >= fn.length) return fn.apply(this, args)
-        else {
-                // 2.实现柯里化
-                return function (...args2) {
-                    // 递归调用，若是参数达到则返回
-                    return curried.apply(this, [...args, ...args2])
-                }
-            }
-        }
-    }`
-    ```
-
-
-
-39. instanceof 实现方式
-
-    可以判断复杂数据类型,返回的是一个布尔值
-
-    但不能判断基本数据类型
-
-    首先需要了解instanceOf是干嘛的？
-
-    ```javascript
-    /*
-    	instanceof运算符用于检测构造函数的prototype属性是否出现在某个实例对象的原型链上。
-    	再根据原型的关系得出结论 ===> 实例的`__proto__`属性指向构造函数的原型
-    	并且只要子对象原型链上有一个符合即可
-    */
-    function instanceOfFn(child, parent) {
-        let proto = child.__proto__
-        let prototype = parent.prototype
-        while (true) {
-            if (proto === null) {
-                return false
-            } else {
-                if (proto === prototype) return true
-            }
-            proto = proto.__proto__
-        }
-    }
-    ```
-
-40. typeof
-
-    能够快速区分基本数据类型，但是不能够区分null、array和object
-
-    ```javascript
-    typeof null === 'object'
-    typeof new Array === 'object'
-    typeof new Object === 'object'
-    ```
 
 41. Object.prototype.toSring.call()
 
     能够精准区分数据类型
-
-42. 手写promise，promise.all等方法
-
-    promise又被称作期约，通常用来描述一个异步操作是否成功或者失败以及其结果值。它拥有三种状态：
-
-    - `pending`：待定，暂时未知结果，既未兑现，也未失败。
-    - `fulfilled`：已兑现，表示成功
-    - `rejected`：已拒绝，代表失败
-
-    通常我们在创建一个`promise`对象的时候会传入一个回调函数。其参数便是对应成功和失败的回调。当使用`resolve`后即成功，`reject`即失败。`promise`对象的状态一经确认不会改变。
-
-    同时我们可以调用then方法获取promise对象的结果，同时then方法也是返回一个promise对象，所以可以采用链式调用的方法.
-
-    同时promise也有几个静态方法比如
-
-    - `all`：接收一个iterable类型（数组、map），返回所有成功的promise的结果，如果有一个失败，就立即返回失败的结果
-
-    - `any`：接收同上，返回第一个执行成功的结果，若是全部失败则报错
-
-    - `allSettled`：接收同上，返回所有的结果，会包含状态和结果，结果类似如下
-
-      ```js
-      [
-        { status: 'fulfilled', value: 1 },
-        { status: 'rejected', reason: 2 }
-      ]
-      ```
-
-    - `race`：接收同上，返回第一个执行的结果
-
-    - `resolve`：返回一个带有拒原因的`Promise`对象
-
-    - `reject`：返回一个带有成功结果的`Promise`对象
-
-    ```javascript
-    class RTPromise {
-      // 三种状态
-      status = 'pending'
-      // 成功失败的回调
-      successCbs = []
-      errorCbs = []
-      constructor(executor) {
-        let resolve = (value) => {
-          if (this.status === 'pending') {
-            // 添加到异步任务
-            queueMicrotask(() => {
-              // 状态一经确定不可再改变
-              if (this.status === 'pending') {
-                this.status = 'fulfilled'
-                this.value = value
-                this.successCbs.forEach((cb) => cb())
-              }
-            })
-          }
-        }
-        let reject = (err) => {
-          if (this.status === 'pending') {
-            queueMicrotask(() => {
-              if (this.status === 'pending') {
-                this.status = 'rejected'
-                this.err = err
-                this.errorCbs.forEach((cb) => cb())
-              }
-            })
-          }
-        }
-        executor(resolve, reject)
-      }
-      then(onFulfilled, onRejected) {
-        // 解决没有参数的情况
-        onFulfilled = onFulfilled || ((v) => v)
-        onRejected =
-          onRejected ||
-          ((err) => {
-            throw err
-          })
-        return new RTPromise((resolve, reject) => {
-          // 同步时
-          if (this.status === 'fulfilled') {
-            resolve(onFulfilled(this.value)) // 将上一个then函数的值返回
-          }
-
-          if (this.status === 'rejected') {
-            reject(onRejected(this.err)) // 将上一个then函数的值返回
-          }
-          // 异步时候
-          if (this.status === 'pending') {
-            this.successCbs.push(() => {
-              resolve(onFulfilled(this.value))
-            })
-            this.errorCbs.push(() => {
-              reject(onRejected(this.err))
-            })
-          }
-        })
-      }
-      catch(onRejected) {
-        return this.then(undefined, onRejected)
-      }
-      finally(onFinally) {
-        // 不论成功失败都执行
-        return this.then(
-          () => onFinally(),
-          () => onFinally()
-        )
-      }
-      static resolve(value) {
-        return new RTPromise((resolve) => resolve(value))
-      }
-      static reject(err) {
-        return new RTPromise((undefined, reject) => reject(err))
-      }
-      static all(RTPromises) {
-        return new RTPromise((resolve, reject) => {
-          const values = []
-          RTPromises.forEach((RTPromise) => {
-            RTPromise.then(
-              // 全部正确才返回
-              (res) => {
-                values.push(res)
-                if (values.length === RTPromises.length) resolve(values)
-              },
-              // 有一个错误就抛出错误
-              (err) => reject(err)
-            )
-          })
-        })
-      }
-      static race(RTPromises) {
-        return new RTPromise((resolve, reject) => {
-          RTPromises.forEach((RTPromise) => {
-            RTPromise.then(
-              // 谁先谁出
-              (res) => resolve(res),
-              (err) => reject(err)
-            )
-          })
-        })
-      }
-    }
-
-    ```
-
-    race：返回第一个被返回的值（成功、失败都可）
-
-43. 手写bind、apply、call
-
-    ```javascript
-    // bind方法只是返回一个函数，并不执行
-    Function.prototype.rtBind = function (thisArg, ...argArray) {
-      // argArray是绑定的时候便被预置进的参数
-      thisArg =
-        thisArg === null || thisArg === undefined ? window : Object(thisArg)
-      thisArg.fn = this
-      return function (...args) {
-        // args 是调用返回函数时候传递的参数
-        // 解决两次传参
-        let finalArgs = [...argArray, ...args]
-        return thisArg.fn(...finalArgs)
-       }
-    }
-
-    // 注意：call与apply的区别仅是参数区别。
-    // call 接收参数列表
-    // apply接收参数数组
-    Function.prototype.rtApply = function (thisArg, args) {
-        // null undefined => window
-        // 基础类型封装对象
-        thisArg =
-            thisArg === null || thisArg === undefined ? window : Object(thisArg)
-        // 从函数调用过来，所以this默认绑定指向函数对象
-        thisArg.fn = this
-        // 当没有参数传递的情况
-        args = args || []
-        return thisArg.fn(...args)
-    }
-
-    Function.prototype.rtCall = function (thisArg, ...args) {
-        // null undefined => window
-        // 基础类型封装对象
-        thisArg =
-            thisArg === null || thisArg === undefined ? window : Object(thisArg)
-        // 从函数调用过来，所以this默认绑定指向函数对象
-        thisArg.fn = this
-        return thisArg.fn(...args)
-    }
-    ```
-
-
-
-44. new操作符实现了什么
-
-    1. 会将new.target指向构造函数(es6+)
-    2. 创建了一个全新的对象。
-    3. 这个对象会被执行`[[Prototype]]`（也就是`__proto__`）链接。
-    4. 生成的新对象会绑定到函数调用的`this`。
-    5. 如果函数没有返回对象类型`Object`(包含`Functoin`, `Array`, `Date`, `RegExg`, `Error`)，那么`new`表达式中的函数调用会自动返回这个新的对象。
-
-    ```JavaScript
-    function newOperator(ctor){
-        if(typeof ctor !== 'function'){
-          throw 'newOperator function the first param must be a function';
-        }
-        // ES6 new.target 是指向构造函数
-        newOperator.target = ctor;
-        // 1.创建一个全新的对象，
-        // 2.并且执行[[Prototype]]链接
-        // 4.通过`new`创建的每个对象将最终被`[[Prototype]]`链接到这个函数的`prototype`对象上。
-        var newObj = Object.create(ctor.prototype);
-        // ES5 arguments转成数组 当然也可以用ES6 [...arguments], Aarry.from(arguments);
-        // 除去ctor构造函数的其余参数
-        var argsArr = [].slice.call(arguments, 1);
-        // 3.生成的新对象会绑定到函数调用的`this`。
-        // 获取到ctor函数返回结果
-        var ctorReturnResult = ctor.apply(newObj, argsArr);
-        // 小结4 中这些类型中合并起来只有Object和Function两种类型 typeof null 也是'object'所以要不等于null，排除null
-        var isObject = typeof ctorReturnResult === 'object' && ctorReturnResult !== null;
-        var isFunction = typeof ctorReturnResult === 'function';
-        if(isObject || isFunction){
-            return ctorReturnResult;
-        }
-        // 5.如果函数没有返回对象类型`Object`(包含`Functoin`, `Array`, `Date`, `RegExg`, `Error`)，那么`new`表达式中的函数调用会自动返回这个新的对象。
-        return newObj;
-    }
-    ```
-
-45. 手写防抖
-
-    多次执行一个事件，只会执行最后一次（输入框联想搜索）
-
-    ```javascript
-    function debounce(fn, delay) {
-        let timer = null
-        return function(...args) {
-            if(timer) clearTimeout(timer)
-            timer = setTimeout(() => {
-                fn.apply(this, args)
-                timer = null
-            }, delay)
-        }
-    }
-    ```
-
-46. 手写节流
-
-    多次执行一个事件，在一定的时间内只会执行一次
-
-    （页面的点击，scroll，浏览器缩放操作）
-
-    ```javascript
-    function throttle(fn, delay) {
-    	let timer = null
-        return function(...args) {
-            if(timer) return
-            timer = setTimeout(() => {
-                // 绑定this
-                fn.apply(this, ...args)
-                timer = null
-            }, delay)
-        }
-    }
-    ```
-
-47. 手写深拷贝
-
-    ```javascript
-    // map 解决循环引用问题
-    function deepClone(obj, map = new Map()) {
-    	if(typeof obj  === 'function' || Object.prototype.toString.call(obj) !== '[object Object]') return obj
-        if(map.has(obj)) return map.get(obj)
-        const res = Array.isArray(obj) ? [] : {}
-        map.set(obj, res)
-        for(const key of obj) {
-            if(Object.hasOwnProperty.call(obj, key)) {
-                res[key] = deepClone(obj[key])
-            }
-        }
-        return res
-    }
-    ```
-
-48. 事件总线的实现吗
-
-    ```javascript
-    class Mitt {
-      constructor() {
-        this.tasks = {}
-      }
-      // 监听
-      on(eventName, callback) {
-        let handlers = this.tasks[eventName]
-        if (!handlers) {
-          handlers = [] // 考虑到一个eventName可以有多个回调
-          this.tasks[eventName] = handlers
-        }
-        callback && handlers.push(callback)
-        console.log(handlers)
-      }
-      // 触发
-      emit(eventName, payload) {
-        const handlers = this.tasks[eventName]
-        if (!handlers) return
-        handlers.forEach((handler) => handler(payload))
-      }
-      // 取消
-      off(eventName, handler) {
-          const handlers = this.tasks[eventName]
-          if (!handlers) return
-          handlers.splice(handlers.indexOf(handler), 1)
-      }
-    }
-
-    ```
 
 49. 异步编程
 
@@ -953,8 +639,9 @@ date: '2022-04-12'
     早期是通过回调函数来实现的,往往会造成回调地狱的后果,且难以编码.后面便出现了期约,和Promise规范,以及es6的promise API.
 
 50. 什么是事件循环？
-
-    ​	`事件循环`负责收集用事件（包括用户事件以及其他非用户事件等）、对任务进行排队以便在合适的时候执行回调。然后它执行所有处于等待中的 JavaScript 任务（宏任务），然后是微任务，然后在开始下一次循环之前执行一些必要的渲染和绘制操作。
+     首先了解一个概念
+    JavaScript运行时：在执行 JavaScript 代码的时候，JavaScript 运行时实际上维护了一组用于执行 JavaScript 代码的 **代理**。每个代理由一组执行上下文的集合、执行上下文栈、主线程、一组可能创建用于执行 worker 的额外的线程集合、一个任务队列以及一个微任务队列构成。除了主线程（某些浏览器在多个代理之间共享的主线程）之外，其它组成部分对该代理都是唯一的。
+    ​	而这些代理是由**事件循环**驱动的。`事件循环`负责收集用事件（包括用户事件以及其他非用户事件等）、对任务进行排队以便在合适的时候执行回调。然后它执行所有处于等待中的 JavaScript 任务（宏任务），然后是微任务，然后在开始下一次循环之前执行一些必要的渲染和绘制操作。
 
     ​	首先，JavaScript是单线程，这意味着在任何时候js只能执行同步任务。
 
@@ -1087,6 +774,7 @@ date: '2022-04-12'
 56. 闭包(Closure)
 
     `闭包`是指有权访问另一个函数作用域中的变量的函数，通常是在函数嵌套中实现的--《JavaScript高级程序设计》
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures
 
     `你不知道的JavaScript`：当函数可以记住并访问所在的词法作用域，即使函数是在当前词法作用域之外执行，这时 就产生了闭包。
 
@@ -1265,6 +953,7 @@ date: '2022-04-12'
     // promise
     // async1 end
     ```
+
 63. 块作用域
 
    块是指被大括号("{}")包裹住的相关联的statements的集合
@@ -1414,47 +1103,4 @@ undefined是一个全局对象的属性，指当前变量还未定义
 
 `Object.prototype.toString.call()`
 
-77. 事件委托
 
-通过target（触发），currentTarget（绑定）判断
-
-ev.target || ev.srcElement（兼容）
-
-78. == 和 === 的区别
-
-`==`在比较时候会进行`隐式转换`，然后再比较
-
-`隐式转换详解`：
-
-- 如果两个操作数都是对象，则仅当两个操作数都引用同一个对象时才返回`true`。
-- 如果一个操作数是`null`，另一个操作数是`undefined`，则返回`true`。
-- 如果两个操作数是不同类型的，就会尝试在比较之前将它们转换为相同类型：
-  - 当**数字与字符串**进行比较时，会尝试将字符串转换为数字值。
-  - 如果操作数之一是**Boolean**，则将布尔操作数转换为1或0。
-    - 如果是`true`，则转换为`1`。
-    - 如果是 `false`，则转换为`0`。
-  - 如果操作数之一**是对象**，另一个是数字或字符串，会尝试使用对象的`valueOf()`和`toString()`方法将对象转换为原始值。
-- 如果操作数具有相同的类型，则将它们进行如下比较：
-  - `String`：`true`仅当两个操作数具有相同顺序的相同字符时才返回。
-  - `Number`：`true`仅当两个操作数具有相同的值时才返回。`+0`并被`-0`视为相同的值。如果任一操作数为`NaN`，则返回`false`。
-  - `Boolean`：`true`仅当操作数为两个`true`或两个`false`时才返回`true`。
-
-`===`是严格比较，包括类型和值，即不会进行隐式转换。
-
-79. map和对象的区别
-
-    1. map可以使用任意值为键，对象只可以使用字符串和symbol作键
-    2. map是一个可迭代对象，而对象不是
-    3. 使用方法的区别，map使用set、clear、has等方法，拥有size等属性。
-
-80. 为什么`typeof NaN === 'number'`
-
-`NaN`：not a number
-
-就是计算机科学中数值数据类型的一类型值。
-
-如何得到NaN
-
-    1. 以NaN为操作数
-    2. 0/0的除法
-    3. 负数的平方根
