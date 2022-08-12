@@ -100,6 +100,11 @@ module.exports = {
           ],
         },
         {
+          title: 'TypeScript',
+          collapsable: false,
+          children: ['ts/tsStudy', 'ts/ei'],
+        },
+        {
           title: '其他常见',
           collapsable: false,
           children: ['other'],
