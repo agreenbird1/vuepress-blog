@@ -4,9 +4,9 @@ author: RoleTang
 date: '2022-07-25'
 ---
 
-手写promise，promise.all等方法
+手写 promise，promise.all 等方法
 
-promise又被称作期约，通常用来描述一个异步操作是否成功或者失败以及其结果值。它拥有三种状态：
+promise 又被称作期约，通常用来描述一个异步操作是否成功或者失败以及其结果值。它拥有三种状态：
 
 - `pending`：待定，暂时未知结果，既未兑现，也未失败。
 - `fulfilled`：已兑现，表示成功
@@ -14,20 +14,20 @@ promise又被称作期约，通常用来描述一个异步操作是否成功或�
 
 通常我们在创建一个`promise`对象的时候会传入一个回调函数。其参数便是对应成功和失败的回调。当使用`resolve`后即成功，`reject`即失败。`promise`对象的状态一经确认不会改变。
 
-同时我们可以调用then方法获取promise对象的结果，同时then方法也是返回一个promise对象，所以可以采用链式调用的方法.
+同时我们可以调用 then 方法获取 promise 对象的结果，同时 then 方法也是返回一个 promise 对象，所以可以采用链式调用的方法.
 
-同时promise也有几个静态方法比如
+同时 promise 也有几个静态方法比如
 
-- `all`：接收一个iterable类型（数组、map），返回所有成功的promise的结果，如果有一个失败，就立即返回失败的结果
+- `all`：接收一个 iterable 类型（数组、map），返回所有成功的 promise 的结果，如果有一个失败，就立即返回失败的结果
 
 - `any`：接收同上，返回第一个执行成功的结果，若是全部失败则报错
 
 - `allSettled`：接收同上，返回所有的结果，会包含状态和结果，结果类似如下
 
   ```js
-  [
+  ;[
     { status: 'fulfilled', value: 1 },
-    { status: 'rejected', reason: 2 }
+    { status: 'rejected', reason: 2 },
   ]
   ```
 
@@ -79,6 +79,7 @@ class RTPromise {
       ((err) => {
         throw err
       })
+    // then方法返回一个新的promise，即链式调用
     return new RTPromise((resolve, reject) => {
       // 同步时
       if (this.status === 'fulfilled') {
@@ -131,6 +132,7 @@ class RTPromise {
       })
     })
   }
+
   static race(RTPromises) {
     return new RTPromise((resolve, reject) => {
       RTPromises.forEach((RTPromise) => {
@@ -142,8 +144,50 @@ class RTPromise {
       })
     })
   }
-}
 
+  // 返回所有执行完成后的结果
+  static allSettled(RTPromises) {
+    return new RTPromise((resolve, reject) => {
+      const results = []
+      RTPromises.forEach((RTPromise) => {
+        RTPromise.then(
+          (res) => {
+            results[idx] = {
+              status: 'fulfilled',
+              value: res,
+            }
+            // 需要按照对应的下标返回
+            // 同时所有的内容都已完成才返回
+            if(results.every(res => !!res)) resolve(results)
+          },
+          (err) => {
+            results[idx] = {
+              status: 'rejected',
+              reason: err,
+            }
+            if(results.every(res => !!res)) resolve(results)
+          }
+        )
+      })
+    })
+  }
+
+  // 返回第一个被接收的 promise
+  static any(RTPromises) {
+    const errCbs = 0
+    return new RTPromise((resolve, reject) => {
+      RTPromises.forEach((RTPromise) => {
+        RTPromise.then(res => {
+          resolve(res)
+        },err => {
+          errCbs++
+          // 当所有的都被拒绝
+          if(errCbs === RTPromises.length) reject(new AggregateError(err))
+        })
+      })
+    })
+  }
+}
 ```
 
 race：返回第一个被返回的值（成功、失败都可）
