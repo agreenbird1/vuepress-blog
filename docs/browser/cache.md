@@ -10,30 +10,42 @@ date: '2022-07-26'
 
 1. 强缓存
 
-   1. Expires(HTTP/1.0，响应头部字段) ==> 具体的时间/0
+   1. **Expires**(HTTP/1.0，响应头部字段) ==> 具体的时间/0为过期
 
       即过期时间，相对于服务器而言，在过期之间可以直接从缓存中获取数据。
 
-   2. Cache-Control(HTTP1.1，通用头部字段) ==> max-age/no-store
+      但可能存在服务器时间与浏览器时间不一致的情况，比如时区不一致导致的。
 
-      采用过期时长（相对时间），对应max-age，从浏览器返回到时长内都采用缓存。（pragma：同cache-control的no-cache。即直接服务器验证，进入协商缓存步骤）
+   2. **Cache-Control**(HTTP1.1，通用头部字段) ==> `max-age/no-store`
 
-   同时存在时候优先考虑Cache-Control。当缓存资源失效后，进入协商缓存。
+      采用过期时长（相对时间），对应`max-age`，从浏览器返回到时长内都采用缓存。
+
+      其他字段：
+
+      - `pragma`：同`cache-control`的`no-cache`。即直接服务器验证，进入协商缓存步骤
+      - `public`: 客户端和代理服务器都可以缓存。
+      - `private`: 这种情况就是只有浏览器能缓存了，中间的代理服务器不能缓存。
+      - `no-cache`: 跳过当前的强缓存，发送HTTP请求，即直接进入协商缓存阶段。
+      - `no-store`：非常粗暴，不进行任何形式的缓存。
+      - `s-maxage`：这和max-age长得比较像，但是区别在于s-maxage是针对代理服务器的缓存时间。
+
+
+   同时存在时候优先考虑`Cache-Control`。当缓存资源失效后，进入协商缓存。
 
 2. 协商缓存
 
-   1. Last-Modified
+   1. **Last-Modified**
 
       即为最后修改时间。浏览器发送请求后，服务器添加这个字段，如果再次请求，浏览器发送请求会携带`If-Modified-Since`字段，然后服务器收到会和自身的`该资源的最后的修改时间`对比
 
       - 如果请求头中的时间小于最后修改的时间，则进行更新。跟常规返回流程一样。
       - 否则304，让浏览器使用缓存。
 
-   2. ETag
+   2. **ETag**
 
-      ETag是服务器根据比如MD5的算法，生成对应文件的唯一的标识，文件改变后这个值便会被修改。
+      `ETag`是服务器根据比如`MD5`的算法，生成对应文件的唯一的标识，文件改变后这个值便会被修改。
 
-      下一次浏览器发送请求时候会将ETag的值作为`If-None-Match`字段。
+      下一次浏览器发送请求时候会将`ETag`的值作为`If-None-Match`字段。
 
       - 一样，返回304，使用缓存
       - 否则常规HTTP流程
@@ -46,25 +58,25 @@ date: '2022-07-26'
 
 3. 缓存位置
 
-   1. Service Worker
+   1. **Service Worker**
 
-      Htpps传输协议下的使用的，是运行在浏览器背后的独立线程。
+      Https传输协议下的使用的，是运行在浏览器背后的独立线程。
 
-   2. Memory Cache
+   2. **Memory Cache**
 
       内存，主要是当前页面中已经抓取到的资源，比如已经下载的样式脚本等，缓存随着tab关闭而随之被释放
 
-   3. Disk Cache
+   3. **Disk Cache**
 
       根据Header字段判断缓存
 
-   4. Push Cache
+   4. **Push Cache**
 
       HTTP/2.0的内容，前三个都未中时才使用
 
 4. 浏览器本地存储
 
-   1. Cookie
+   1. **Cookie**
 
       弥补HTTP在状态管理下的不足
 
@@ -89,7 +101,7 @@ date: '2022-07-26'
 
 
 
-5. localStorage
+5. **localStorage**
 
    `本地存储`。针对一个域名，即在同一个域名下，会存储相同的一段localStorage，通常是以键值对的形式进行存储的。
 
@@ -98,11 +110,11 @@ date: '2022-07-26'
       - 接口封装，操作方便
 
 
-6. sessionStorage
+6. **sessionStorage**
 
    `会话存储`。同localStorage，但是是会话级别的，网页关闭，sessionStorage便也不存在了
 
-7. indexedDB
+7. **indexedDB**
 
    非关系型的数据库，容量更大。
 
