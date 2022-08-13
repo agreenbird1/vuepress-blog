@@ -5,14 +5,22 @@ date: '2022-07-15'
 ---
 
 ## 常见的性能指标
-需要衡量的重要指标 #
+需要衡量的重要指标
+
 [Time to First Byte (TTFB)](https://web.dev/ttfb/)
+
 [First Contentful Paint 首次内容绘制 (FCP)](https://web.dev/fcp/)
+
 [Largest Contentful Paint 最大内容绘制 (LCP)](https://web.dev/lcp/)
+
 [First Input Delay 首次输入延迟 (FID)](https://web.dev/fid/)
+
 [Time to Interactive 可交互时间 (TTI)](https://web.dev/tti/)
+
 [Total Blocking Time 总阻塞时间 (TBT)](https://web.dev/tbt/)
+
 [Cumulative Layout Shift 累积布局偏移 (CLS)](https://web.dev/cls/)
+
 [Interaction to Next Paint (INP)](https://web.dev/inp/)
 
 

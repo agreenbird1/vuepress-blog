@@ -205,26 +205,34 @@ vue中的渲染器被进行了二次封装，对不同的平台，传入不同�
 1. 生命周期
 
    `create阶段`：vue实例被创建
-    `beforeCreate`: 创建前，此时data和methods中的数据都还没有初始化
-    `created`： 创建完毕，data中有值，未挂载
+
+      - `beforeCreate` : 创建前，此时data和methods中的数据都还没有初始化
+
+      - `created`： 创建完毕，data中有值，未挂载
 
    `mount阶段`： vue实例被挂载到真实DOM节点
-    `beforeMount`：可以发起服务端请求，去请求数据
-    `mounted`: 此时可以操作DOM
+
+      - `beforeMount`：可以发起服务端请求，去请求数据
+
+      - `mounted`: 此时可以操作DOM
 
    `update阶段`：当vue实例里面的data数据变化时，触发组件的重新渲染
-    `beforeUpdate` :更新前
-    `updated`：更新后
+
+      - `beforeUpdate` :更新前
+
+      - `updated`：更新后
 
    `unmount阶段`：vue实例被卸载
 
-    `beforeUnmount`：依然保有全部功能
+      - `beforeUnmount`：依然保有全部功能
 
-    `unmounted`：渲染副作用、侦听器都已经停止，可以清除一些副作用
+      - `unmounted`：渲染副作用、侦听器都已经停止，可以清除一些副作用
 
    `destroy阶段`：vue实例被销毁
-    `beforeDestroy`：实例被销毁前，此时可以手动销毁一些方法
-    `destroyed`:销毁后
+
+      - `beforeDestroy`：实例被销毁前，此时可以手动销毁一些方法。比如清除定时器，清除`dom`引用等等
+
+      - `destroyed`:销毁后
 
    同时vue3移除了`create`、`beforeCreate`生命周期函数。直接写在setup函数中即可。
 
@@ -234,10 +242,10 @@ vue中的渲染器被进行了二次封装，对不同的平台，传入不同�
 
 3. 组件通信的方式
 
+   - v-model
    - props
    - $emit / v-on
    - .sync
-   - v-model
    - ref
    - \$children /\$parent
    - \$attrs / $listeners
@@ -304,20 +312,20 @@ vue中的渲染器被进行了二次封装，对不同的平台，传入不同�
 
 路由的实现方式。
 
-    1. `hash` + `hashChange`
+  1. `hash` + `hashChange`
 
-    - 兼容性好，`hashChange`支持到IE8
+  - 兼容性好，`hashChange`支持到IE8
 
-    - `url`中会携带`/#/`，不美观
-          - 不需要服务端改造
+  - `url`中会携带`/#/`，不美观
+        - 不需要服务端改造
 
-    2. `History API` 和 `pushState` + `popState`
+  2. `History API` 和 `pushState` + `popState`
 
-      - 兼容到IE10
-      - `url`跟正常`url`一样
-        - 由于其`url`跟正常`url`一样，所以在刷新时，会以此`url`为链接请求服务端页面，而服务端是没有这个页面的话会404，因此需要服务端配合将所有请求重定向到首页，将整个路由的控制交给前端路由
+    - 兼容到IE10
+    - `url`跟正常`url`一样
+      - 由于其`url`跟正常`url`一样，所以在刷新时，会以此`url`为链接请求服务端页面，而服务端是没有这个页面的话会404，因此需要服务端配合将所有请求重定向到首页，将整个路由的控制交给前端路由
 
-      **注意：`history.pushState()`或`history.replaceState()`不会触发`popstate`事件。只有在做出浏览器动作时，才会触发该事件，如用户点击浏览器的回退按钮（或者在Javascript代码中调用`history.back()`或者`history.forward()`方法）**
+    **注意：`history.pushState()`或`history.replaceState()`不会触发`popstate`事件。只有在做出浏览器动作时，才会触发该事件，如用户点击浏览器的回退按钮（或者在Javascript代码中调用`history.back()`或者`history.forward()`方法）**
 
 4. 导航守卫流程
 
