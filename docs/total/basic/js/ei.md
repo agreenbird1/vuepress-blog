@@ -1,7 +1,7 @@
 ---
 title: javascript常见面试题
 author: RoleTang
-date: '2022-04-12'
+date: '2022-08-13'
 ---
 
 1. 深入理解微任务、事件循环
@@ -177,6 +177,8 @@ date: '2022-04-12'
     `注意`：async声明的函数默认返回一个promise对象
 
 13. 为什么Promise.prototype.catch可以捕获前面出现的所有错误？
+
+    如果 then 中抛出了异常，那么就会把这个异常作为参数，传递给下一个 then 的失败的回调`onRejected`；
 
     它的执行代码其实更类似与在try catch中执行的，遇见错误会向后抛出，
 
