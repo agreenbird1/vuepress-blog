@@ -10,15 +10,16 @@ date: '2022-07-11'
 
 2. Webpack 的热更新原理
 
-   Webpack 的热更新的核心就是客户端从服务端拉取更新后的文件。webpack-dev-server与浏览器维护了一个websocket链接。同时webpack会监听文件的变化，当文件变化的时候wds会向浏览器推送更新。然后浏览器便可以通过jsonp请求请求更新的资源，然后如何更新就是HotModulePlugin所决定的了。
+   `Webpack` 的热更新的核心就是客户端从服务端拉取更新后的文件。`webpack-dev-server`与浏览器维护了一个`websocket`链接。同时`webpack`会监听文件的变化，当文件变化的时候`wds`会向浏览器推送更新。然后浏览器便可以通过`jsonp`请求请求更新的资源，然后如何更新就是`HotModulePlugin`所决定的了。
 
-3. 如何优化 Webpack 的构建速度？
+3. 如何优化 `Webpack` 的构建速度？
 
-   - 多进程打包：thread-loader
-   - 图片压缩：image-webpack-loader
-   - 缩小打包作用域：exclude确定loader作用范围
-   - 使用cache-loader
-   - 开启tree-shaking
+   - 多进程打包：`thread-loader`
+   - 图片压缩：`image-webpack-loader`
+   - 缩小打包作用域：`exclude`确定`loader`作用范围，这里exclude的优先级更高
+   - 使用`cache-loader`，或者在使用`babel-loader`时候启用缓存。`options`选项中配置`cacheDirectory: true`
+   - 开启`tree-shaking`
+   - 使用`external`配置稳定的依赖并使用cdn进行排除
 
 4. 模块打包原理
 
@@ -37,19 +38,26 @@ date: '2022-07-11'
 
    1. loader
 
-      loader本质上是一个函数，接收内容并转换然后输出。因为webpack只认识js，loader就是一个翻译官。
+      loader本质上是一个函数，接收内容并转换然后输出。因为 `webpack` 只认识js，`loader` 就是一个翻译官。在接收资源之前，该资源的格式可能千奇百怪，但转译之后应该输出标准的 `JavaScript` 文本或者 `AST` 对象，之后 `webpack` 便能继续处理模块依赖。
 
-      配置在module.rules下
+      配置在 `module.rules` 下
 
-      loader 运行在打包文件之前
+      `loader` 运行在打包文件之前
 
    2. plugin
 
-      plugin就是插件，是基于事件流平台tapable的。可以扩建webpack的功能。webpack在生命周期中会广播很多事件，可以监听这些事件在合适的情况下调用不同的API实现不同的功能。
+      plugin就是插件，是基于事件流平台 `tapable` 的。可以扩建 `webpack` 的功能。`webpack` 在生命周期中会广播很多事件，可以监听这些事件在合适的情况下调用不同的API实现不同的功能。
 
-      配置在plugins
+      配置在`plugins`
 
-      plugins 在整个编译周期都起作用
+      `plugins` 在整个编译周期都起作用
+
+      1. 什么是插件？
+         从形态上看，插件通常是一个带有 `apply` 函数的类。该函数会得到参数 `compiler`，以此为起点可以调用 `hook` 对象注册各种钩子回调。而回调函数有多种多个（并行、串行、异步……），可以参考 `vite` 中使用的 `rollup` 的钩子。webpack 中主要是使用的 `tapable` 中的钩子。
+      2. 钩子的触发时机？
+         随着 `webpack` 的编译，会逐次触发钩子， `plugin` 中也可以随之调用。
+      3. 钩子回调中如何影响编译的状态？
+         通过在 `hook` 中调用内部的修改状态、上下文的 `api` 等等对 `webpack` 产生 `sid effect`
 
 7. 常用的plugin
 
