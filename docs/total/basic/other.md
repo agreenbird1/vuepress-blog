@@ -323,3 +323,31 @@ node.js是一个基于`Chrome V8` 引擎的 `JavaScript` 运行时环境。
 短期：1年内，进入公司，接触到开发流程，需求->开发->测试，熟悉技术栈
  中期：1-3年，从保住饭碗到熟练工的过程，熟悉业务，个人有承担模块搭建流程，决定开发方向的能力
  长期：3-5年，专注于感兴趣的方向，深耕行业中某一细化分支的业务逻辑，比如富文本，echart等，成为这一领域的专家
+
+24. 如何控制判断 Promise 超时
+
+使用 Promise.race 来进行控制。
+
+```javascript
+// 假设它是我们需要进行的请求
+let successCb = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve("成功！");
+  }, 2000);
+});
+// 这是我们需要进行判断的时长的错误请求
+let failedCb = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    reject("失败！");
+  }, 1000);
+});
+// 我们可以判断，如果当前返回的是错误的请求，代表另外的请求已经超时
+Promise.race([failedCb, successCb])
+  .then((res) => {
+    console.log(res);
+  })
+  .catch((e) => {
+    console.log(e);
+  });
+
+```
