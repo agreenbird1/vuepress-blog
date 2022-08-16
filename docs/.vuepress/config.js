@@ -40,15 +40,6 @@ module.exports = {
         ],
       },
       {
-        text: '其他',
-        items: [
-          { text: '测试', link: '/other/test/' },
-          { text: '性能优化', link: '/other/perf/' },
-          { text: '面经', link: '/other/eis/juexiao' },
-          { text: '项目', link: '/other/projects/errabbit/' },
-        ],
-      },
-      {
         text: '精读系列',
         items: [
           { text: 'vuejs设计与实现', link: '/read/vuejs/artweigh' },
@@ -56,6 +47,15 @@ module.exports = {
             text: 'JavaScript设计模式与开发实践',
             link: '/read/designPattern/',
           },
+        ],
+      },
+      {
+        text: '其他',
+        items: [
+          { text: '测试', link: '/other/test/' },
+          { text: '性能优化', link: '/other/perf/' },
+          { text: '面经', link: '/other/eis/juexiao' },
+          { text: '项目', link: '/other/projects/errabbit/' },
         ],
       },
       {
