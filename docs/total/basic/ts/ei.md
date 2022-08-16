@@ -1,5 +1,5 @@
 ---
-title: typescript面试题
+title: typescript基础
 author: RoleTang
 date: '2022-08-11'
 ---

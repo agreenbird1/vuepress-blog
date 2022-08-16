@@ -1,5 +1,5 @@
 ---
-title: 浏览器面试题
+title: 浏览器总结
 author: RoleTang
 date: '2022-07-26'
 ---
