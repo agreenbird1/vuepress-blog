@@ -409,3 +409,25 @@ text系列:   text-align line-height等
 25. css动画
 
 @keyframes和animation配合使用
+
+26. 如何更好的写css？
+
+    1. 比如多用多重选择器，而不是分开写。
+        ```css
+        h1,
+        h2 {
+            font-size: 16px;
+        }
+
+        // 而不是
+        h1 {
+           font-size: 16px; 
+        }
+        h2 {
+           font-size: 16px; 
+        }
+        ```
+    2. 对于单个的独特的样式，可以采用id选择器而不是类选择器。
+    3. 多使用简写属性，而不是分开写。
+    4. 写`color`的时候直接写对应的十六进制而不是写`red`之类；比如写`font-weight`直接使用`700`而不是`bold`。
+    5. 合理的使用`will-change`属性，因为它可以更好的利用`gpu`的性能；但也不能过度，因为会有较多的计算。
