@@ -39,10 +39,10 @@ Array.prototype.map = function (cb, thisArg) {
 
 ```javascript
 /**
- * 
- * @param { Function } cb - 回调函数，四个参数 previousVal，currentVal，idx，arr 
+ *
+ * @param { Function } cb - 回调函数，四个参数 previousVal，currentVal，idx，arr
  * @param {*} initialVal - 初始值
- * @returns 
+ * @returns
  */
 Array.prototype.reduce = function (cb, initialVal) {
   if (this === null || this === undefined)
@@ -80,3 +80,22 @@ Array.prototype.reduce = function (cb, initialVal) {
 ```
 
 ### filter
+
+```javascript
+Array.prototype.filter = function (cb, thisArg) {
+  if (this === null || this === undefined)
+    throw new Error("Cannot read property 'map' of null or undefined!")
+  if (typeof cb !== 'function') throw new Error(cb + 'is not a function')
+
+  const arr = Object(this)
+  const res = []
+  for (let i = 0; i < arr.length; i++) {
+    if (i in arr) {
+      let bool = cb(arr[i], i, arr)
+      bool && res.push(arr[i])
+    }
+  }
+  return res
+}
+
+```
