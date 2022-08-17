@@ -1,7 +1,7 @@
 ---
 title: TypeScript初探
 author: RoleTang
-date: '2022-08-11'
+date: '2022-08-17'
 ---
 
 
@@ -9,15 +9,15 @@ date: '2022-08-11'
 
 1. keyof
 
-  对象、class 在 TypeScript 对应的类型是索引类型（Index Type），可以映射类型。
+  对象、`class` 在 `TypeScript` 对应的类型是索引类型（`Index Type`），可以映射类型。
 
-  获取一个类型上的所有键的值，并返回一个联合类型。
+  获取一个类型上的所有键的值，并返回一个**联合类型**。
 
-  keyof T 是查询索引类型中所有的索引，叫做索引查询，返回的是索引的联合类型。
+  `keyof` T 是查询索引类型中所有的索引，叫做索引查询，返回的是索引的联合类型。
 
   T[Key] 是取索引类型某个索引的值，叫做索引访问。
 
-  in 是用于遍历联合类型的运算符。
+  `in` 是用于遍历联合类型的运算符。
 
    ```typescript
    interface IPerson {
@@ -39,8 +39,6 @@ date: '2022-08-11'
      return p[k];
    }
    ```
-
-   
 
 2. in
 
@@ -170,10 +168,26 @@ date: '2022-08-11'
      YSE = "YES",
      NO,
    }
-   
+
+
+   enum Boolean {
+     YSE = 2,
+     NO,
+   }
+
+   // 那么此时 NO 就会接着上面最近的一个开始
+   // Boolean.NO === 2  true
    ```
-
-
+  同时枚举能够包含计算成员，比如
+  ```typescript
+  enum Test {
+    One,
+    Two,
+    Three = 'three'.length
+    Four // 必须手动赋值
+  }
+  ```
+  但是需要特别注意的是包含了计算成员的下一个成员必须具有初始化的值。
 
 ### ts装饰器
 

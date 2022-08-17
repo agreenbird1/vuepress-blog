@@ -1,7 +1,7 @@
 ---
 title: typescript基础
 author: RoleTang
-date: '2022-08-11'
+date: '2022-08-17'
 ---
 
 
@@ -11,6 +11,7 @@ date: '2022-08-11'
     2. 更好的静态的类型检查（编译时检查），并配合编辑器在开发时候提供提示等。
 
 2. const和readonly的区别？
+    `const`可以防止对应的值被更改，但对象的属性中的值还可以更改，因为const像是一个地址的引用。`readonly`可以防止对象的属性被更改。
 
 3. typescript类型系统中的类型？
 
@@ -23,9 +24,9 @@ date: '2022-08-11'
 
     2. 接口（``Interface``）：用于描述函数、对象以及构造器的结构
     
-    3. 枚举（``Enum``）：一系列值的复合
+    3. 枚举（````）：一系列值的复合
         ```typescript
-        enum Transpiler {
+         Transpiler {
             Babel = 'babel',
             Postcss = 'postcss',
             Terser = 'terser',
@@ -67,8 +68,71 @@ date: '2022-08-11'
 
    建议：定义函数类型时候使用`type`，其他的时候能用`interface` 就用 `interface`，否则再使用`type` 
 
-5. TypeScript 中 any、never、unknown、null & undefined 和 void 有什么区别？
 
-6. typescript中的this？
+5. typescript中的this？
 
-7. 
+    和js中的this特点一致，包括箭头函数的特点。但是需要在配置中进行开启，否则会一直报错。
+
+6. interface如何给数组做声明？
+    ```typescript
+    // Array 声明
+    interface NumberArray { 
+        [index: number]: number; 
+    } 
+    ```
+
+7. 联合类型(|)的特点？
+
+    代表当前声明的值可以是传入的声明中的几个类型中的其中一个类型。
+    
+8. 交叉类型(&)的特点？
+    
+    对于复合类型，其内容会包含在一起。而对于简单类型，就是取的相同的重合的交叉类型。
+
+9. `const` 枚举和普通枚举的区别？
+
+    它会在编译阶段被删除，并且不能包含计算成员。
+
+10. declare，declare global是什么？
+
+    declare 是用来定义全局变量、全局函数、全局命名空间、js modules、class等
+
+    declare global 为全局对象 window 增加新的属性
+
+    ```typescript
+    declare global { 
+        interface Window { 
+            csrf: string; 
+        }
+    }
+    ```
+
+11. 类中成员的 public、private、protected、readonly 修饰符的理解？
+
+    - public: 成员都默认为public，被此限定符修饰的成员是可以被外部访问；
+    - private: 被此限定符修饰的成员是只可以被类的内部访问；
+    - protected: 被此限定符修饰的成员是只可以被类的内部以及类的子类访问;
+    - readonly: 关键字将属性设置为只读的。 只读属性必须在声明时或构造函数里被初始化。
+
+12. const断言
+
+    1. 对象字面量的属性，获得readonly的属性，成为只读属性
+
+    2. 数组字面量成为readonly tuple只读元组
+
+    3. 字面量类型不能被扩展（比如从hello类型到string类型）
+
+    ```typescript
+    let val = "hello" as const; // 此时 val 的类型为 "hello"
+    val = "hi" // 会报错，类型不一致
+    
+    // 但是实际上
+    let val1 = "hello" // 此时 val1 的类型是 string
+
+    // type '"hello"'
+    let x = "hello" as const
+    // type 'readonly [10, 20]'
+    let y = [10, 20] as const
+    // type '{ readonly text: "hello" }'
+    let z = { text: "hello" } as const
+    ```
