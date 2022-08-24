@@ -13,20 +13,24 @@ class mitt {
 
   $emit(taskName, payload) {
     const tasks = this.tasks[taskName]
+    // 存放当前一次性的 task
+    const removeTasks = []
     if (tasks) {
       tasks.forEach((cb) => {
         cb(payload)
         // 如果当前是只执行一次的函数，直接在执行之后将其关闭即可
         if (cb.once) {
-          this.$off(taskName, cb)
-          console.log(this.tasks[taskName])
+          // 不能在这里执行删除，如果执行了，forEach循环就直接停止了
+          // this.$off(taskName, cb)
+          removeTasks.push(cb)
         }
       })
     }
+    // 执行完毕后再进行删除
+    removeTasks.forEach((cb) => this.$off(taskName, cb))
   }
 
   $on(taskName, cb) {
-    if(typeof cb !== 'function') { throw new Error('mitt callback must be a function!')}
     if (!this.tasks[taskName]) {
       this.tasks[taskName] = []
     }
