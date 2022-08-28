@@ -77,11 +77,14 @@ date: '2022-07-11'
 
       清除打包的文件目录
 
+   5. imagemin-webpack-plugin
+
+      图片压缩
+
 8. 常见的loader
 
    1. file-loader：引入图片字体需要l
    2. url-loader：引入图片，可以使用base64格式
-   3. image-loader：压缩处理图片
    4. css-loader：加载css，支持模块化
    5. style-loader：将css以style标签加入文件
    6. postcss-loader：添加css属性前缀
