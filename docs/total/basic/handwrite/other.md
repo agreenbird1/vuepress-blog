@@ -13,7 +13,7 @@ function deepClone(obj, map = new Map()) {
     if(map.has(obj)) return map.get(obj)
     const res = Array.isArray(obj) ? [] : {}
     map.set(obj, res)
-    for(const key of obj) {
+    for(const key in obj) {
         if(Object.hasOwnProperty.call(obj, key)) {
             res[key] = deepClone(obj[key])
         }

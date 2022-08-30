@@ -23,7 +23,7 @@ date: '2022-07-25'
        // 1.创建一个全新的对象，
        // 2.并且执行[[Prototype]]链接
        // 4.通过`new`创建的每个对象将最终被`[[Prototype]]`链接到这个函数的`prototype`对象上。
-       var newObj.__proto__  = Object.create(ctor.prototype);
+       var newObj = Object.create(ctor.prototype);
        // ES5 arguments转成数组 当然也可以用ES6 [...arguments], Aarry.from(arguments);
        // 除去ctor构造函数的其余参数
        var argsArr = [].slice.call(arguments, 1);

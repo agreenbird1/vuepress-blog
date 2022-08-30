@@ -1,7 +1,7 @@
 ---
 title: node总结
 author: RoleTang
-date: '2022-08-16'
+date: '2022-08-27'
 ---
 
 
@@ -53,9 +53,21 @@ date: '2022-08-16'
 
 6. 阻塞、非阻塞，异步、非异步的区别
 
-   阻塞和非阻塞是相对于被调用者的。
+  ![nodejs下的阻塞与非阻塞](https://nodejs.org/zh-cn/docs/guides/blocking-vs-non-blocking/)
 
-   异步、非异步是相对于调用者的（比如异步不会阻塞后续的脚本的执行）。
+   - **阻塞和非阻塞**关注的是程序在等待调用结果（消息，返回值）时的状态.
+
+      所谓同步，就是在发出一个调用时，在没有得到结果之前，该调用就不返回。但是一旦调用返回，就得到返回值了。
+
+      换句话说，就是由调用者主动等待这个调用的结果。
+
+      而异步则是相反，调用在发出之后，这个调用就直接返回了，所以没有返回结果。换句话说，当一个异步过程调用发出后，调用者不会立刻得到结果。而是在调用发出后，被调用者通过状态、通知来通知调用者，或通过回调函数处理这个调用。
+
+   - **同步和异步**关注的是消息通信机制
+
+      阻塞调用是指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。
+
+      非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。
 
 7. 如何判断是文件还是文件夹？
 
@@ -88,7 +100,7 @@ date: '2022-08-16'
 
     devDependencies：开发环境依赖的包
 
-    peerDenpendencies：项目依赖的对等依赖，即是你依赖的某个包是以另外一个宿主包为前提的。如element-plus依赖于vue3
+    peerDependencies：项目依赖的对等依赖，即是你依赖的某个包是以另外一个宿主包为前提的。如element-plus依赖于vue3
 
     ![image](/node/install流程.png)
 
@@ -105,17 +117,24 @@ date: '2022-08-16'
 
     事件循环是 Node.js 处理非阻塞 I/O 操作的机制——尽管 JavaScript 是单线程处理的——当有可能的时候，它们会把操作转移到系统内核中去。
 
-    在 node.js 中的一次事件循环中，被称作是一次 tick
+    在 node.js 中的每一次事件循环，被称作是一次 tick
 
-    node中的宏任务：setTimeout、setInterval、setImmdiate、I/O操作等。
+    node中的宏任务：setTimeout、setInterval、setImmediate（Nodejs）、I/O操作等。
 
-    微任务：Promise的方法、nextTick等。
+    微任务：Promise的方法、process.nextTick（Nodejs）等。
 
     看图：
 
     ![GitHub](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/3/2/1709951e658af197~tplv-t2oaga2asx-zoom-in-crop-mark:1304:0:0:0.awebp)
 
     整个阶段分为：输入数据阶段(incoming data)->轮询阶段(poll)->检查阶段(check)->关闭事件回调阶段(close callback)->定时器检测阶段(timers)->I/O事件回调阶段(I/O callbacks)->闲置阶段(idle, prepare)->轮询阶段...
+
+    - 定时器：本阶段执行已经被 setTimeout() 和 setInterval() 的调度回调函数。
+    - 待定回调：执行延迟到下一个循环迭代的 I/O 回调。
+    - idle, prepare：仅系统内部使用。
+    - 轮询：检索新的 I/O 事件;执行与 I/O 相关的回调（几乎所有情况下，除了关闭的回调函数，那些由计时器和 - setImmediate() 调度的之外），其余情况 node 将在适当的时候在此阻塞。
+    - 检测：setImmediate() 回调函数在这里执行。
+    - 关闭的回调函数：一些关闭的回调函数，如：socket.on('close', ...)。
 
 
 
