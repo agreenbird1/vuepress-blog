@@ -1116,4 +1116,23 @@ undefined是一个全局对象的属性，指当前变量还未定义
 
 `Object.prototype.toString.call()`
 
+70. let和const 声明的变量存放在哪里？
 
+  ```html
+  <script>
+    var a = 1;
+    let b = 2;
+    const c = 3;
+    console.dir(new (function foo() {})());
+  </script>
+  
+  ```
+  运行结果：
+
+  ![let-const](/js/let-const.png)
+
+  可见使用 `let` 和 `const` 声明的变量是存放在了一个单独的作用域 `script` 中，也没有挂载在 `global` 上。
+
+  GlobalEnv是一个复合环境，包括一个由global构成的对象环境(objEnv)和一个一般声明的环境(declsEnv)组合而成，它是双环境组成的，统一交付一个环境存取的界面（objEnv/declsEnv 对应 Global/Script)
+
+  let/const 声明会放在declsEnv里面，而var的变量会通过ObjEnv来声明, 所以显而易见说明，let,const 声明的变量不在window对象
