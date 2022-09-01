@@ -1127,7 +1127,7 @@ undefined是一个全局对象的属性，指当前变量还未定义
     const c = 3;
     console.dir(new (function foo() {})());
   </script>
-  
+
   ```
   运行结果：
 
@@ -1138,3 +1138,8 @@ undefined是一个全局对象的属性，指当前变量还未定义
   GlobalEnv是一个复合环境，包括一个由global构成的对象环境(objEnv)和一个一般声明的环境(declsEnv)组合而成，它是双环境组成的，统一交付一个环境存取的界面（objEnv/declsEnv 对应 Global/Script)
 
   let/const 声明会放在declsEnv里面，而var的变量会通过ObjEnv来声明, 所以显而易见说明，let,const 声明的变量不在window对象
+
+
+71. Number.MAX_SAFE_INTEGER
+
+  MAX_SAFE_INTEGER 是一个值为 9007199254740991 的常量。因为 Javascript 的数字存储使用了 IEEE 754 中规定的双精度浮点数数据类型，而这一数据类型能够安全存储 -(2^53 - 1) 到 2^53 - 1 之间的数值（包含边界值）。
