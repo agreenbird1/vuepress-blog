@@ -371,6 +371,8 @@ date: '2022-08-16'
 
 22. css3伪类选择器
 
+    hover也是伪类选择器
+
     | [ :first-of-type](https://www.runoob.com/cssref/sel-first-of-type.html) | p:first-of-type       | 选择每个p元素是其父级的第一个p元素                        | 3    |
     | ------------------------------------------------------------ | --------------------- | --------------------------------------------------------- | ---- |
     | [:last-of-type](https://www.runoob.com/cssref/sel-last-of-type.html) | p:last-of-type        | 选择每个p元素是其父级的最后一个p元素                      | 3    |
