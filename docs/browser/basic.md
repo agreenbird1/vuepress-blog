@@ -71,6 +71,11 @@ date: '2022-07-26'
 | chrome     | Chromium/Blink/webkit | Blink是开源引擎WebKit中WebCore组件的一个分支                 |
 | Opera      | blink/Webkit/Presto   | 现在跟随chrome的步伐，同时参与开发                           |
 
+8. 分辨率以及物理像素相关
+
+  [前端需要直到的物理像素的知识](https://juejin.cn/post/6918323869824909319)
+
+
 **浏览器内核常常也是我们说的浏览器引擎(排版引擎,页面渲染引擎)**
 
 8. 浏览器线程
