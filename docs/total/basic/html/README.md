@@ -106,21 +106,19 @@ date: '2022-08-17'
 
 7. meta标签
 
-   表示那些不能由其它 HTML 元相关元素（link、style等）表示的任何元信息。
+   表示那些不能由其它 `HTML` 元相关元素（link、style等）表示的任何元信息。
 
-   可设置的属性：
+   meta 元素定义的元数据的类型包括以下几种：
 
-   `charset`：定义文档的字符编码
+    1. 如果设置了 `name` `属性，meta` 元素提供的是文档级别（`document-level`）的元数据，应用于整个页面。 `name` 属性一般配合 `content` 属性使用，以名 - 值对的方式给文档提供元数据。`name` 可设置的值有
+      -  `viewport`：[设置视图宽高，用户操作以及缩放](https://www.cnblogs.com/huhewei/p/13946995.html#:~:text=%E4%B8%80%E4%B8%AA%E5%B8%B8%E7%94%A8%E7%9A%84%E9%92%88%E5%AF%B9%E7%A7%BB%E5%8A%A8%E7%BD%91%E9%A1%B5%E4%BC%98%E5%8C%96%E8%BF%87%E7%9A%84%E9%A1%B5%E9%9D%A2%E7%9A%84%20viewport%20meta%20%E6%A0%87%E7%AD%BE%E5%A4%A7%E8%87%B4%E5%A6%82%E4%B8%8B%EF%BC%9A%201%E3%80%81width,%3A%20%E6%8E%A7%E5%88%B6viewport%E7%9A%84%E5%A4%A7%E5%B0%8F%EF%BC%8C%E5%8F%AF%E4%BB%A5%E6%8C%87%E5%AE%9A%E4%B8%80%E4%B8%AA%E5%80%BC%EF%BC%8C%E5%A6%82600%EF%BC%8C%20%E6%88%96%E8%80%85%E7%89%B9%E6%AE%8A%E7%9A%84%E5%80%BC%EF%BC%8C%E5%A6%82device-width%E4%B8%BA%E8%AE%BE%E5%A4%87%E7%9A%84%E5%AE%BD%E5%BA%A6%EF%BC%88%E5%8D%95%E4%BD%8D%E6%98%AF%E7%BC%A9%E6%94%BE%E4%B8%BA100%25%E7%9A%84CSS%E7%9A%84%E5%83%8F%E7%B4%A0%EF%BC%89%202%E3%80%81height%20%3A%20%E5%92%8Cwidth%E7%9B%B8%E5%AF%B9%E5%BA%94%EF%BC%8C%E6%8C%87%E5%AE%9A%E9%AB%98%E5%BA%A6)
+      - `keywords`：页面关键词。
+      - `description`：页面的描述内容
+    2. 如果设置了 `http-equiv` 属性，`meta` 元素则是编译指令，提供的信息与类似命名的 `HTTP` 头部相同。
+      - `content-security-policy`：指定csp安全策略，对应的`content`就是具体的策略
+    3. 如果设置了 `charset` 属性，`meta` 元素是一个字符集声明，告诉文档使用哪种字符编码。
+    4. 如果设置了 `itemprop` 属性，`meta` 元素提供用户定义的元数据。
 
-   `content`：此属性包含`http-equiv`或`name`属性的值
-
-   `content-security-policy`：指定csp安全策略
-
-   `content-type`：值必须是`text/html; charset=utf-8`
-
-   `keywords`：页面关键词。
-
-   `description`：页面的描述内容
 
 8. 以前的路由和现在的路由
 
@@ -186,7 +184,7 @@ date: '2022-08-17'
 15. script标签为什么要放在body标签的底部，【defer async】
 
     - 单线程，js下载会阻塞页面渲染
-    - `defer`：下载和加载都是异步的，如果有多个，会根据书写的顺序进行下载
+    - `defer`：下载和加载都是异步的,它在文档解析后但在触发 `DOMContentLoaded` 之前执行。，如果有多个，会根据书写的顺序进行下载
     - `async`：下载是异步的，加载还是同步的（而且如果存在多个 async 的时候，它们之间的**执行顺序也不确定**，完全依赖于网络传输结果，谁先到执行谁。）
     ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b0a8a139519f46dfa2d1992c58eb5397~tplv-k3u1fbpfcp-zoom-in-crop-mark:3024:0:0:0.awebp)
 
@@ -195,6 +193,10 @@ date: '2022-08-17'
 
     - `src`：把资源下载到页面中使**浏览器解析**的方式 ，会阻塞文档。同时下载的资源会嵌入到`src`的位置。
     - `href` 是超文本引用，它指向资源的位置，建立与目标文件之间的联系）
+
+    浏览器解析方式
+    - 当浏览器遇到href会并行下载资源并且不会停止对当前文档的处理。(同时也是为什么建议使用 link 方式加载 CSS，而不是使用 @import 方式)
+    - 当浏览器解析到src ，会暂停其他资源的下载和处理，直到将该资源加载或执行完毕。(这也是script标签为什么放在底部而不是头部的原因)
 
 17. DOM(0~2)级事件分别有哪些
 
@@ -234,9 +236,9 @@ a
 
 20. 伪类和伪元素，区别
 
-`伪类`：是添加到选择器的关键字，指定要选择的元素的特殊状态，比如hover，last-child。
+`伪类`：是添加到选择器的关键字，指定要选择的元素的特殊状态，比如`hover，last-child`。
 
-`伪元素`：伪元素为DOM树没有定义的虚拟元素。
+`伪元素`：伪元素为DOM树没有定义的虚拟元素，比如 `::after` 。
 
 根本区别是`伪元素`会新创建一个元素，不是存在在DOM文档上的
 

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #div {
+        width: 200px;
+        height: 200px;
+        background-color: red !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="div"></div>
+
+    <script>
+      const nums = [5, 7, 7, 8, 8, 10]
+      const target = 6
+      div.addEventListener('click', function () {
+        let left = 0,
+          right = nums.length - 1,
+          mid = Math.floor(left + (right - left) / 2)
+        while (nums[mid] !== target && left < right) {
+          if (nums[mid] > target) right = mid - 1
+          else left = mid
+          mid = Math.floor(left + (right - left) / 2)
+        }
+        return mid
+      })
+    </script>
+  </body>
+</html>
