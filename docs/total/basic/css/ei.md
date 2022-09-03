@@ -27,7 +27,11 @@ date: '2022-08-16'
 
 3. clientHeight,scrollHeight,offsetHeight
 
-   clientHeight：表示的是可视区域的高度，不包含 border 和滚动条offsetHeight： 表 示 可 视 区 域 的 高 度 ， 包 含 了 border 和 滚 动 条scrollHeight：标识元素内容顶部折叠的高度
+   clientHeight：表示的是可视区域的高度，不包含 border 和滚动条
+
+   offsetHeight： 表 示 可 视 区 域 的 高 度 ， 包 含 了 border 和 滚 动 条
+
+   scrollHeight：标识元素内容顶部折叠的高度
 
 4. 实现居中对齐的方式
 
@@ -144,7 +148,7 @@ date: '2022-08-16'
 
      `padding` `margin`:相对于直接父元素的 `width`
 
-     ``border-radius``:相对于自身
+     ``border-radius``:相对于自身。[百分比时](https://www.runoob.com/css3/css3-border-radius.html)
 
      缺陷:计算困难;规则较多,可能搞混淆.
 
@@ -219,7 +223,7 @@ date: '2022-08-16'
       4. flex-basis: <length> | auto; /* default auto */
       // 设置项目占据主轴的大小，类似width，但优先级更高。
       5. flex: none | [ <'flex-grow'> <'flex-shrink'>? || <'flex-basis'> ]
-      // 默认值为0 1 auto
+      // 默认值为0 0 auto
       // flex:1; ==> 1 1 0%;
       6. align-self: auto | flex-start | flex-end | center | baseline | stretch;
       // 设置单一项目覆盖align-items属性。
@@ -251,9 +255,11 @@ date: '2022-08-16'
       grid-template-columns: 200px auto;
       ```
 
+    4. 使用定位，左侧盒子定位。右侧盒子设置margin-left的值
 
 
-10. 双飞翼、圣杯布局
+
+10. 三栏布局
 
     1. 使用flex布局，对三个子元素设置order即可
     2. grid。设置`grid-template-areas:'left  main fight'`，然后子元素设置`grid-area`属性即可
@@ -285,20 +291,29 @@ date: '2022-08-16'
 
     同上，但是需要设置`border-radius: 50%;`
 
-15. margin塌陷问题（margin合并是类似的，但是出现在兄弟元素中，且出现在垂直方向）。
+15. margin塌陷问题与margin合并。
 
-    出现在父子元素中。
+      - margin塌陷
 
-    比如父级设置了`margin-top:100px;`
+        出现在父子元素中，且只有垂直方向。比如父级设置了`margin-top:100px;`子级设置了`margin-top:50px;`此时子级设置的margin便不会生效
 
-    子级设置了`margin-top:50px;`此时子级设置的margin便不会生效（只取了同方向上的最大值）
+        总结：父子嵌套的垂直方向的margin值只取了同方向上的最大值
 
-    解决：
+        解决：
 
-    - overflow:hidden（触发BFC）
-    - 设置padding
+          - `overflow:hidden`（触发BFC）
+          - 设置padding
+          - 利用伪元素设置`overflow:hidden;`
 
-    - 利用伪元素设置overflow:hidden;
+      - margin合并
+
+        出现在兄弟元素中，且只有垂直方向。比如上兄弟设置下边距为100px，下兄弟设置上边距值为100px。本应该200px的间距但只会有100px。
+
+        解决：
+
+          - 进行计算，直接设置为200px
+          - 包裹一个外层元素设置`overflow:hidden;`触发bfc，但是会更改页面结构
+
 
 16. BFC？
 
@@ -340,7 +355,7 @@ date: '2022-08-16'
     清除浮动的方式：
 
     1. 父级div定义height
-    2. 最后一个浮动元素后加空div标签(或者伪元素) 并添加样式clear:both。
+    2. 最后一个浮动元素后加空div标签(或者伪元素，为元素需要设置为块级) 并添加样式clear:both。意思是可以在父级元素最后添加了一个块级元素同时清除了浮动。
     3. 父级div定义触发BFC。
 
 19. display:inline-block 什么时候会显示间隙？
@@ -414,6 +429,8 @@ text系列:   text-align line-height等
 25. css动画
 
 @keyframes和animation配合使用
+
+通过在动画序列中定义关键帧（或 waypoints）的样式来控制 CSS 动画序列中的中间步骤。和 转换 transition 相比，关键帧 keyframes 可以控制动画序列的中间步骤。
 
 26. 如何更好的写css？
 
