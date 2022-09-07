@@ -115,7 +115,7 @@ module.exports = {
         {
           title: '计算机网络基础',
           collapsable: true,
-          children: ['translayer', 'applayer', 'Http', 'websocket'],
+          children: ['bs','translayer', 'applayer', 'Http', 'websocket'],
         },
       ],
       '/packtools/vite/': ['vite', 'esbuild', 'rollup'],
@@ -146,10 +146,12 @@ module.exports = {
       '/other/eis/': [
         {
           title: '暑假实习面经',
+          collapsable: false,
           children: ['juexiao', 'dianjiang', 'lenovo', 'jinshanyun'],
         },
         {
           title: '2023秋招面经',
+          collapsable: false,
         },
       ],
       '/total/node/': ['', 'ei'],
