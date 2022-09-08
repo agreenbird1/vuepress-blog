@@ -265,8 +265,7 @@ vue中的渲染器被进行了二次封装，对不同的平台，传入不同�
    vue3中使用composition API 可以将各种逻辑封装成函数，需要时进行引用使用。
 
    - 逻辑组织更强，更美观
-   - 逻辑复用，更加高耦合、低内聚
-
+   - 逻辑复用，更加[高内聚，低耦合](https://juejin.cn/post/6992023978466344997)
    vue3直接将关注的某一个点抽离一个单独的函数并使用。如果是vue2写在一个函数（文件）中代码也更难以维护。
 
 3. 组件通信方式
@@ -282,41 +281,41 @@ vue中的渲染器被进行了二次封装，对不同的平台，传入不同�
 
 4. 修饰符
 
-  1. 事件修饰符
+    1. 事件修饰符
 
-      - .stop ——调用 event.stopPropagation()。
-      - .prevent ——调用 event.preventDefault()。
-      - .capture ——在捕获模式添加事件监听器。
-      - .self ——只有事件从元素本身发出才触发处理函数。
-      - .{keyAlias} ——只在某些按键下触发处理函数。
-      - .once ——最多触发一次处理函数。
-      - .left ——只在鼠标左键事件触发处理函数。
-      - .right ——只在鼠标右键事件触发处理函数。
-      - .middle ——只在鼠标中键事件触发处理函数。
-      - .passive ——通过 { passive: true } 附加一个 DOM 事件。
+        - .stop ——调用 event.stopPropagation()。
+        - .prevent ——调用 event.preventDefault()。
+        - .capture ——在捕获模式添加事件监听器。
+        - .self ——只有事件从元素本身发出才触发处理函数。
+        - .{keyAlias} ——只在某些按键下触发处理函数。
+        - .once ——最多触发一次处理函数。
+        - .left ——只在鼠标左键事件触发处理函数。
+        - .right ——只在鼠标右键事件触发处理函数。
+        - .middle ——只在鼠标中键事件触发处理函数。
+        - .passive ——通过 { passive: true } 附加一个 DOM 事件。
 
-  2. 案件修饰符
+    2. 案件修饰符
 
-      通过特定的案件即可，比如`@keyup.enter="submit"`：在按下enter键时候触发submit事件。
+        通过特定的案件即可，比如`@keyup.enter="submit"`：在按下enter键时候触发submit事件。
 
-  3. 系统按键修饰符
+    3. 系统按键修饰符
 
-      - .ctrl
-      - .alt
-      - .shift
-      - .meta
+        - .ctrl
+        - .alt
+        - .shift
+        - .meta
 
-      例如：
-      ```vue
-        <!-- Alt + Enter -->
-        <input @keyup.alt.enter="clear" />
-      ```
+        例如：
+        ```vue
+          <!-- Alt + Enter -->
+          <input @keyup.alt.enter="clear" />
+        ```
 
-  4. v-model修饰符
+    4. v-model修饰符
 
-      - .number
-      - .lazy
-      - .trim
+        - .number
+        - .lazy
+        - .trim
 
 
 

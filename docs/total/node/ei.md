@@ -26,7 +26,13 @@ date: '2022-08-27'
 
    `method`：请求方法
 
-   `headers`：请求头部
+   `getHeaders`：请求头部
+
+   `host`：主机
+
+   `protocol`：请求的协议
+
+   ……
 
 4. node中如何开启子进程？
 
