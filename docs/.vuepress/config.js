@@ -35,7 +35,7 @@ module.exports = {
       {
         text: '计算机基础',
         items: [
-          { text: '计算机网络', link: '/computer/network/' },
+          { text: '计算机网络', link: '/computer/network/bs/' },
           { text: '操作系统', link: '/computer/os/' },
         ],
       },
@@ -114,7 +114,7 @@ module.exports = {
       '/computer/network/': [
         {
           title: '计算机网络基础',
-          collapsable: true,
+          collapsable: false,
           children: ['bs','translayer', 'applayer', 'Http', 'websocket'],
         },
       ],
