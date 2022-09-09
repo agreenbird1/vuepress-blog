@@ -1,20 +1,20 @@
 ---
 title: esbuild
 author: RoleTang
-date: '2022-07-11'
+date: '2022-09-09'
 ---
 
 1. 为什么快？
 
    1. **使用 Golang 开发**，构建逻辑代码直接被编译为原生机器码，而不用像 JS 一样先代码解析为字节码，然后转换为机器码，大大节省了程序运行时间。
 
-2. **多核并行**。内部打包算法充分利用多核 CPU 优势，所有的步骤尽可能并行，这也是得益于 Go 当中多线程共享内存的优势。
+   2. **多核并行**。内部打包算法充分利用多核 CPU 优势，所有的步骤尽可能并行，这也是得益于 Go 当中多线程共享内存的优势。
 
    3. **从零造轮子**。 几乎没有使用任何第三方库，所有逻辑自己编写，大到 AST 解析，小到字符串的操作，保证极致的代码性能。
 
-3. **高效的内存利用**。Esbuild 中从头到尾尽可能地复用一份 AST 节点数据，而不用像 JS 打包工具中频繁地解析和传递 AST 数据（如 string -> TS -> JS -> string)，造成内存的大量浪费。
+   4. **高效的内存利用**。Esbuild 中从头到尾尽可能地复用一份 AST 节点数据，而不用像 JS 打包工具中频繁地解析和传递 AST 数据（如 string -> TS -> JS -> string)，造成内存的大量浪费。
 
-4. 作为依赖预构建的工具
+2. 作为依赖预构建的工具
 
    见vite依赖预构建节。
 
@@ -25,11 +25,11 @@ date: '2022-07-11'
    - 不提供操作打包产物的接口，像 Rollup 中灵活处理打包产物的能力(如`renderChunk`钩子)在 Esbuild 当中完全没有。
    - 不支持自定义 Code Splitting 策略。传统的 Webpack 和 Rollup 都提供了自定义拆包策略的 API，而 Esbuild 并未提供，从而降级了拆包优化的灵活性。
 
-5. 单文件编译——作为TS和JSX的编译工具
+3. 单文件编译——作为TS和JSX的编译工具
 
    vite将esbuild plugin其用作编译器，但缺点便是不能进行类型检查。在使用脚本 `vite build`时候也会先执行`tsc`进行ts类型检查。
 
-6. 代码压缩
+4. 代码压缩
 
    vite将esbuild minify其用作压缩器。
 
@@ -39,15 +39,15 @@ date: '2022-07-11'
 
 
 
-7. 打包API（build（主要），buildSync（同步build，不推荐），serve（开发时））
+5. 打包API（build（主要），buildSync（同步build，不推荐），serve（开发时））
 
    [esbuild - build API](https://esbuild.docschina.org/api/#)
 
-8. 单文件转译（Transform API）
+6. 单文件转译（Transform API）
 
    实现ts、jsx等单文件的转译
 
-9. esbuild 插件
+7. esbuild 插件
 
    插件开发其实就是基于原有的体系结构中进行`扩展`和`自定义`。`其实相当于是对符合条件的import模块进行额外的处理`。一个插件包含了如下内容
 
