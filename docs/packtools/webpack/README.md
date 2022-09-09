@@ -10,7 +10,15 @@ date: '2022-07-11'
 
 2. Webpack 的热更新原理
 
-   `Webpack` 的热更新的核心就是客户端从服务端拉取更新后的文件。`webpack-dev-server`与浏览器维护了一个`websocket`链接。同时`webpack`会监听文件的变化，当文件变化的时候`wds`会向浏览器推送更新。然后浏览器便可以通过`jsonp`请求请求更新的资源，然后如何更新就是`HotModulePlugin`所决定的了。
+    [webpack HMR](https://juejin.cn/book/7115598540721618944/section/7119036095211241472)
+
+    - 使用 webpack-dev-server （后面简称 WDS）托管静态资源，同时以 Runtime 方式注入一段处理 HMR 逻辑的客户端代码；
+    - 浏览器加载页面后，与 WDS 建立 WebSocket 连接；
+    - Webpack 监听到文件变化后，增量构建发生变更的模块，并通过 WebSocket 发送 hash 事件；
+    - 浏览器接收到 hash 事件后，请求 manifest 资源文件，确认增量变更范围；
+    - 浏览器加载发生变更的增量模块；
+    - Webpack 运行时触发变更模块的 module.hot.accept 回调，执行代码变更逻辑；
+    - done。
 
 3. 如何优化 `Webpack` 的构建速度？
 
