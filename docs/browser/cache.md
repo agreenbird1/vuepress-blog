@@ -22,9 +22,10 @@ date: '2022-09-10'
 
       采用过期时长（相对时间），对应`max-age`，从浏览器返回到时长内都采用缓存。
 
+      > Pragma：同`cache-control`的`no-cache`。是HTTP首部字段，目前已经弃用。
+
       其他字段：
 
-      - `pragma`：同`cache-control`的`no-cache`。即直接服务器验证，进入协商缓存步骤
       - `public`: 客户端和代理服务器都可以缓存。
       - `private`: 这种情况就是只有浏览器能缓存了，中间的代理服务器不能缓存。
       - `no-cache`: 跳过当前的强缓存，发送HTTP请求，即直接进入协商缓存阶段。
@@ -64,7 +65,7 @@ date: '2022-09-10'
 
    1. **Service Worker**
 
-      Https传输协议下的使用的，是运行在浏览器背后的独立线程。
+      Https传输协议下的使用的，是运行在浏览器背后的独立线程。无法访问dom，但能做`离线缓存`、`消息代理`等功能。这里的离线缓存便是`service worker cache`
 
    2. **Memory Cache**
 
@@ -72,7 +73,9 @@ date: '2022-09-10'
 
    3. **Disk Cache**
 
-      根据Header字段判断缓存
+      根据Header字段判断缓存。
+
+      对于 2、3 而言，一般是较大的文件会被丢入磁盘；同时
 
    4. **Push Cache**
 
@@ -90,17 +93,16 @@ date: '2022-09-10'
       - 性能缺陷，浏览器每一次发送请求都会携带，而不管是否需要
       - 安全缺陷，以纯文本的方式传递，容易被截获
 
-      cookie（set-cookie）的属性说明
+      cookie（set-cookie）的属性说明，通常是以 name=value 的键值对形式进行存储。
 
       | 属性           | 说明                                                         |
       | -------------- | ------------------------------------------------------------ |
-      | **name=value** | 键值对                                                       |
       | **domain**     | 指定 cookie 所属域名，默认是当前域名                         |
-      | **sameSite**   | 允许服务器要求某个 cookie 在跨站请求时不会被发送，防CSRF攻击。lax：Cookies允许与顶级导航一起发送，并将与第三方网站发起的GET请求一起发送（默认）。strict：完全禁止第三方cookie。none：默认，都会携带。若设置为none需要配合`secure`属性。 |
+      | **sameSite**   | 允许服务器要求某个 cookie 在跨站请求时不会被发送，防CSRF攻击。lax：Cookies允许与顶级导航一起发送，并将与第三方网站发起的GET请求一起发送（默认）。strict：完全禁止第三方cookie。none：默认都会携带。若设置为none需要配合`secure`属性。 |
       | **path**       | **指定 cookie 在哪个路径（路由）下生效，默认是 '/'**。 如果设置为 `/abc`，则只有 `/abc` 下的路由可以访问到该 cookie，如：`/abc/read`。 |
       | **maxAge**     | cookie 失效的时间，单位秒。如果为整数，则该 cookie 在 maxAge 秒后失效。如果为负数，该 cookie 为临时 cookie ，关闭浏览器即失效，浏览器也不会以任何形式保存该 cookie 。如果为 0，表示删除该 cookie 。默认为 -1。 \- **比 expires 好用**。 |
       | **expires**    | 过期时间，在设置的某个时间点后该 cookie 就会失效。 一般浏览器的 cookie 都是默认储存的，当关闭浏览器结束这个会话的时候，这个 cookie 也就会被删除 |
-      | **secure**     | 该 cookie 是否仅被使用安全协议传输。安全协议有 HTTPS，SSL等，在网络上传输数据之前先将数据加密。默认为false。 当 secure 值为 true 时，cookie 在 HTTP 中是无效，在 HTTPS 中才有效。 |
+      | **secure**     | 该 cookie 是否仅被使用安全协议传输。安全协议有 HTTPS 等，在网络上传输数据之前先将数据加密。默认为false。 当 secure 值为 true 时，cookie 在 HTTP 中是无效，在 HTTPS 中才有效。 |
       | **httpOnly**   | 如果给某个 cookie 设置了 httpOnly 属性，则无法通过 JS 脚本 读取到该 cookie 的信息，但还是能通过 Application 中手动修改 cookie，所以只是在一定程度上可以防止 XSS 攻击，不是绝对的安全 |
 
 
