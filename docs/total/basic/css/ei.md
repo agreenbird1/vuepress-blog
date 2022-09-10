@@ -223,7 +223,7 @@ date: '2022-08-16'
       4. flex-basis: <length> | auto; /* default auto */
       // 设置项目占据主轴的大小，类似width，但优先级更高。
       5. flex: none | [ <'flex-grow'> <'flex-shrink'>? || <'flex-basis'> ]
-      // 默认值为0 0 auto
+      // 默认值为0 1 auto
       // flex:1; ==> 1 1 0%;
       6. align-self: auto | flex-start | flex-end | center | baseline | stretch;
       // 设置单一项目覆盖align-items属性。
@@ -236,6 +236,8 @@ date: '2022-08-16'
       flex: 1; =>  flex-grow: 1; flex-shrink: 1; flex-basis: 0%;
       // 只改变第一个 flex-grow
       flex: 2; =>  flex-grow: 2; flex-shrink: 1; flex-basis: 0%;
+
+      flex: auto; =>  flex-grow: 1; flex-shrink: 1; flex-basis: auto;
 
    ```
 
