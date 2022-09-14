@@ -1,7 +1,7 @@
 ---
 title: css基础
 author: RoleTang
-date: '2022-08-16'
+date: '2022-09-14'
 ---
 
 1. 层叠上下文
@@ -27,11 +27,11 @@ date: '2022-08-16'
 
 3. clientHeight,scrollHeight,offsetHeight
 
-   clientHeight：表示的是可视区域的高度，不包含 border 和滚动条
+   clientHeight：表示的是可视区域的高度，包含内边距
 
-   offsetHeight： 表 示 可 视 区 域 的 高 度 ， 包 含 了 border 和 滚 动 条
+   offsetHeight：包括元素的边框、内边距和元素的水平滚动条
 
-   scrollHeight：标识元素内容顶部折叠的高度
+   scrollHeight：包含元素被折叠的高度，包括内边距
 
 4. 实现居中对齐的方式
 
