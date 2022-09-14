@@ -295,29 +295,7 @@ date: '2022-08-16'
       2.  CommonJS 加载的是一个对象（即`module.exports`属性），该对象只有在脚本运行完才会生成（**运行时加载**）。而 ES6 模块不是对象，它的对外接口只是一种静态定义，在代码静态解析阶段就会生成（**编译时加载**）。
       3.  Commonjs导出的是一个对象，是module.exports的。而esm导出的是变量的引用
       4. esm的import语句必须存在在模块的顶部，且导入的值是readOnly的。
-      5. cjs在循环依赖时，是动态执行的，同时因为导出的是对象的拷贝，读取未定义的值也是undefined。对于esm来说，会产生报错，因为import语句都在顶部，执行依赖时对应的变量可能还未定义。
-        ```js
-        // a.mjs
-        export const a = 1
-        import { b } from './b.mjs'
-        console.log('a.mjs', b)
-
-        // b.mjs
-        import { a } from './a.mjs'
-        export const b = 1
-        console.log('b.mjs', a)
-
-        // main.mjs
-        import { a } from './a.mjs'
-        import { b } from './b.mjs'
-
-        console.log('mainjs,', a, b)
-
-        // 执行main.mjs会报错
-        // ReferenceError: Cannot access 'a' before initialization
-        // 因为先引入的 a.mjs，会先去执行
-        // 后又中断去执行 b.mjs ，此时a还未导出，因为import的提升
-        ```
+      5. 因为两个模块加载机制的不同，所以在对待循环加载的时候，它们会有不同的表现。CommonJS遇到循环依赖的时候，只会输出已经执行的部分，后续的输出或者变化，是不会影响已经输出的变量。而ES6模块相反，使用import加载一个变量，变量不会被缓存，真正取值的时候就能取到最终的值；
 
 22. Object.defineProperty
 
