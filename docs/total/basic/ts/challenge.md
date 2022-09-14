@@ -1,7 +1,7 @@
 ---
 title: type challenge
 author: RoleTang
-date: '2022-08-17'
+date: '2022-09-14'
 ---
 
 刷type challenge遇见的新知识，记录一下。
