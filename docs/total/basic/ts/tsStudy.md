@@ -25,16 +25,16 @@ date: '2022-08-17'
      age: string;
    }
    type Person = keyof IPerson; // "name" | "age" ,意思是Person类型的值只能选中这其中两个
-   
+
    // 常见用法
-   
+
    const p1: IPerson = {
      name: "afanti",
      age: "18",
    };
-   
+
    // 在 type challenge 前两道题中也有体现
-   // 限定了访问对象的key的合法化 
+   // 限定了访问对象的key的合法化
    function getValue(p: IPerson, k: Person) {
      return p[k];
    }
@@ -53,6 +53,11 @@ date: '2022-08-17'
      name: 10,
      age: 19,
    };
+
+   // 对于元组类型来说，直接取下标的值
+   type TupleToObject<T extends readonly (string | number)[]> = {
+     [P in T[number]]: P
+   }
    ```
 
 3. infer
@@ -63,21 +68,21 @@ date: '2022-08-17'
    type FirstType<Tuple extends unknown[]> = Tuple extends [infer T, ...infer R]
      ? T
      : never;
-   
+
    type res = FirstType<[1, 2, 3]>; // 此时 res 类型就为 1
-   
+
    // 当然也可以取最后一个，之前的等等
    type FirstType<Tuple extends unknown[]> = Tuple extends [infer T, ...infer R]
      ? R
      : never;
-   
+
    // 模式匹配，进行提取
    type myPromise = Promise<7>;
    type getMyPromiseValue<P> = P extends Promise<infer value> ? value : never;
    type p = getMyPromiseValue<myPromise>; // type p = 7
    ```
 
-   
+
 
 4. 泛型工具
 
@@ -94,7 +99,7 @@ date: '2022-08-17'
           age: string;
       }
       type People = Pick<IAnimal, "name" | "age">;
-      interface IPeople extends Pick<IAnimal, "name" | "age"> {} 
+      interface IPeople extends Pick<IAnimal, "name" | "age"> {}
       // 相当于
       interface IPeople {
           name: string;
@@ -102,7 +107,7 @@ date: '2022-08-17'
       }
       ```
 
-      
+
 
    4. Exclude<T, U>  此工具是在 T 类型中，去除 T 类型和 U 类型的交集，返回剩余的部分。
 
@@ -124,11 +129,11 @@ date: '2022-08-17'
 
       ```typescript
       type foo = () => string | number;
-      
+
       type R = ReturnType<foo>; // string | number;
       ```
 
-      
+
 
    8. Required\<T> 与 Partial 相反，是将所有的属性都变成必须属性
 
@@ -160,8 +165,8 @@ date: '2022-08-17'
    }
    // 相当于是默认填充的数字下标
    console.log(Boolean.YSE); // 0
-   console.log(Boolean.NO); // 1 
-   
+   console.log(Boolean.NO); // 1
+
    // 一般更推荐使用 字符串枚举
    // 日志输出更友好，也有更严格的类型检查
    enum Boolean {
@@ -284,11 +289,11 @@ console.log(test.getName()); // Tuesday
    interface IApple {
      name: string
    }
-   
+
    interface IRedApple extends IApple {
      color: 'red'
    }
-   
+
    const apple2: IRedApple = { name: 'apple1', color: 'red' }
    const apple1: IApple = apple2 // 红苹果一定是苹果
    ```
@@ -299,14 +304,14 @@ console.log(test.getName()); // Tuesday
    let printName = (apple: IApple) => {
      console.log(apple.name)
    }
-   
+
    let printColor = (apple: IRedApple) => {
      console.log(apple.color)
    }
-   
+
    // 是可以的，因为 printColor 使用 IRedApple 进行约束，但是 printName 只用到了父类型的属性和方法，它仍然是类型安全的。 => 这就是逆变，函数的参数有逆变的性质（而返回值是协变的，也就是子类型可以赋值给父类型）。
    // printColor = printName // √
-   
+
    // printName 函数声明时候使用的是 IApple 进行约束，但是按照 IRedApple 的方式进行访问，那么就不安全了（存在 IApple 不存在的属性）。
    // 如果需要完成赋值不报错，关闭 strictFunctionTypes 选项（tsconfig.json中），就可以完成双向协变。
    // printName = printColor // ×
@@ -318,7 +323,7 @@ console.log(test.getName()); // Tuesday
 
    ```typescript
    type Func = (a: string) => void;
-   
+
    // 不能将类型“(a: 'hello') => undefined”分配给类型“Func”。
    //  参数“a”和“a” 的类型不兼容。
    //  不能将类型“string”分配给类型“"hello"”
@@ -378,7 +383,7 @@ type isExtends = s extends f ? true : false // true！
      name: string;
      age: number;
    }
-   
+
    // 但如果对其他简单类型
    type key = string | number | symbol;
    type myKey = key & number;
@@ -390,7 +395,7 @@ type isExtends = s extends f ? true : false // true！
 
    ```typescript
    // 1. 一般用作接口继承，此处不作演示
-   
+
    // 2. 用作类似 if else 的三元运算符
    type myPromise = Promise<7>;
    // 如果 P extends Promise，则使用 infer 推导出value的类型并赋值
@@ -423,7 +428,7 @@ type isExtends = s extends f ? true : false // true！
    }
    ```
 
-   建议：定义函数类型时候使用`type`，其他的时候能用`interface` 就用 `interface`，否则再使用`type` 
+   建议：定义函数类型时候使用`type`，其他的时候能用`interface` 就用 `interface`，否则再使用`type`
 
 5. ${string} 的用处
 
@@ -446,7 +451,7 @@ type isExtends = s extends f ? true : false // true！
      str extends `${infer s1}_${infer s2}${infer s3}`
        ? `${s1}${Uppercase<s2>}${toTuofeng<s3>}`
        : str;
-   
+
    type str = toTuofeng<_str>;
    ```
 
@@ -456,7 +461,7 @@ type isExtends = s extends f ? true : false // true！
 
    ```ts
    type union = "a" | "b" | "c";
-   
+
    type UpperCaseA<Item extends string> = Item extends "a"
      ? Uppercase<Item>
      : Item;
@@ -472,7 +477,7 @@ type isExtends = s extends f ? true : false // true！
    // 简单类型中是取交集
    type a = 1 | 2 | 3;
    type b = 3 | 4 | 5;
-   
+
    // 复杂类型是取并集
    type c = a & b; // 做交叉类型   c = 3
    type d = () => void | {
@@ -489,7 +494,7 @@ type isExtends = s extends f ? true : false // true！
       declare function func(name: string): string;
       ```
 
-      
+
 
    2. `interface`中声明
 
@@ -500,7 +505,7 @@ type isExtends = s extends f ? true : false // true！
       }
       ```
 
-      
+
 
    3. 取交叉类型（复杂类型就是合并）
 
@@ -508,4 +513,3 @@ type isExtends = s extends f ? true : false // true！
       type func = ((name: string) => string) & ((age: number) => string)
       ```
 
-      

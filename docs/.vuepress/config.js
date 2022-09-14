@@ -102,7 +102,7 @@ module.exports = {
         {
           title: 'TypeScript',
           collapsable: false,
-          children: ['ts/tsStudy', 'ts/ei'],
+          children: ['ts/tsStudy', 'ts/ei', 'ts/challenge'],
         },
         {
           title: '其他常见',
