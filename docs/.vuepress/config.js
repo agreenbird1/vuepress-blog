@@ -165,7 +165,7 @@ module.exports = {
         {
           title: 'vuejs设计与实现',
           collapsable: false,
-          children: ['artweigh', 'core','design'],
+          children: ['artweigh', 'core','design','reactive'],
         },
       ],
       '/read/designPattern/': [
