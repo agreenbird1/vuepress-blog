@@ -34,3 +34,14 @@ type Includes<T extends readonly any[], U> =
     Equal<P, U> extends true ? true :  Includes<R, U>
   : false
 ```
+
+4. [Parameters](https://github.com/type-challenges/type-challenges/blob/main/questions/03312-easy-parameters/README.zh-CN.md)
+
+```typescript
+// 类型放在类型的位置
+// (...args: infer R) => any 而不是 (infer R) => any
+type MyParameters<T extends (...args: any[]) => any> =
+  T extends (...args: infer R) => any ? R : never
+```
+
+5.
