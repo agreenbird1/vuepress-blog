@@ -151,6 +151,7 @@ module.exports = {
         {
           title: '2023秋招面经',
           collapsable: false,
+          children: ['sxf1', 'sxf2'],
         },
       ],
       '/total/node/': ['', 'ei'],

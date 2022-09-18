@@ -317,6 +317,25 @@ vue中的渲染器被进行了二次封装，对不同的平台，传入不同�
         - .lazy
         - .trim
 
+5. why composition api?
+
+    组合式 API (Composition API) 是一系列 API 的集合，使我们可以使用函数而不是声明选项的方式书写 Vue 组件，但值得注意的是组合式api并不是函数式编程。
+
+    1. better logic reuse(更好的逻辑复用)
+
+        最基本的优势是它使我们能够通过组合函数来实现更加简洁高效的逻辑复用。它解决了vue2中mixin的所有缺陷，
+
+    2. more flexible organization code(更加灵活的组织代码)
+
+        在项目较大的时候，options api会使得相同逻辑部分的代码分散开来。使得`在关注一个逻辑关注点`的时候需要耗费更多的精力，不论是阅读还是进行抽离。
+
+    3. better type interface(更好的类型推导)
+
+        vue2设计时间较早，并未考虑到typescript的类型支持，使得设计实现及其复杂。而组合式api主要是使用基本变量和函数，可以享受更完整的类型推导，不需要书写太多的类型标注。
+
+    4. smaller production bundle and less overhead(生产环境下更小的打包体积)
+
+        基于`<script setup>`的组合式API不需要再通过不停的访问this上下文访问属性，压缩会更高效。
 
 
 
