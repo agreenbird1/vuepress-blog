@@ -139,3 +139,69 @@ type divide<
   ? Res['length']
   : divide<subtract<num1, num2>, num2, [...Res, unknown]>
 ```
+
+8. IsUnion [小册实例](https://juejin.cn/book/7047524421182947366/section/7048282387825819687)
+
+```typescript
+// 如何判断是否是联合类型
+type IsUnion<A, B = A> = A extends A ? ([B] extends [A] ? false : true) : never
+// 何解？
+// 首先，A extends A 是为了触发联合类型的特性，使得 A 可以单独抽离做运算
+// 之后，我们通过 [B] extends [A] 来做判断。此时 A 是联合类型的一个子集，B是完整的联合类型
+// 肯定是不成立的，所以返回 true，判断成功。
+// 其次如果是其他类型，不会有分散传递的特性，[B] extends [A] 肯定是成立的。
+
+// 数组转联合类型
+type ArrToUnion<T extends unknown[]> = T[number]
+```
+
+9. IsAny [小册实例](https://juejin.cn/book/7047524421182947366/section/7048282437238915110)
+
+```typescript
+// 特性：any & 任意值（除never） 都是 any
+type IsAny<T> = 1 extends 2 & T ? true : false
+// 对于 1、 2 来说，是可以替换成其他除never之外的类型
+```
+
+10. IsNever
+
+```typescript
+// never 在条件类型中也比较特殊，如果条件类型左边是类型参数，并且传入的是 never，那么直接返回 never：
+// 比如
+type TestNever<T> = T extends number ? 1 : 2;
+
+type IsNever<T> = [T] extends [never] ? true : false
+```
+
+11. UnionToIntersection
+
+```typescript
+// 联合类型转交叉类型
+// 使用逆变的性质，父类型可以赋值给子类型的
+type UnionToIntersection<U> =
+    (U extends U ? (x: U) => unknown : never) extends (x: infer R) => unknown
+        ? R
+        : never
+```
+
+12. GetOptional
+
+```typescript
+// 对于可选的属性都是 value | undefined。
+// 所以我们可以通过 {} extends Pick<T, key> 来判断当前的 key 是否是可选的
+// never 的值不会被提取
+type GetOptional<T extends Record<string, any>> = {
+  [key in keyof T as {} extends Pick<T, key> ? key : never]: T[key]
+}
+
+```
+
+12. GetRequired
+
+```typescript
+// 同上，将条件的值反转即可
+type GetRequired<T extends Record<string, any>> = {
+  [key in keyof T as {} extends Pick<T, key> ? never : key]: T[key]
+}
+
+```
