@@ -150,7 +150,7 @@ type IsUnion<A, B = A> = A extends A ? ([B] extends [A] ? false : true) : never
 // 之后，我们通过 [B] extends [A] 来做判断。此时 A 是联合类型的一个子集，B是完整的联合类型
 // 肯定是不成立的，所以返回 true，判断成功。
 // 其次如果是其他类型，不会有分散传递的特性，[B] extends [A] 肯定是成立的。
-
+/
 // 数组转联合类型
 type ArrToUnion<T extends unknown[]> = T[number]
 ```
@@ -170,7 +170,8 @@ type IsAny<T> = 1 extends 2 & T ? true : false
 // 比如
 type TestNever<T> = T extends number ? 1 : 2;
 
-type IsNever<T> = [T] extends [never] ? true : false
+
+'
 ```
 
 11. UnionToIntersection
@@ -204,4 +205,72 @@ type GetRequired<T extends Record<string, any>> = {
   [key in keyof T as {} extends Pick<T, key> ? never : key]: T[key]
 }
 
+```
+
+13. CombineArr
+
+```typescript
+// 两个数组合并，并去除不相交的元素
+// 通过将数组内容转成联合类型再判断一次当前的元素是否在另一个数组内
+// T extends Res[number]
+type CombineArr<T extends unknown[], Res extends unknown[]> = T extends [
+  infer First,
+  ...infer Rest
+]
+  ? First extends Res[number]
+    ? CombineArr<Rest, Res>
+    : CombineArr<Rest, [First, ...Res]>
+  : T extends Res[number]
+  ? Res
+  : [...T, ...Res]
+```
+
+13. ParseQueryString
+
+```typescript
+// 合并参数
+// 对于相同的 key，value各有两种情况：数组、单个的值
+// 如果都是数组，combineArr 就行
+// 如果有一方不是数组，则将另一方化成数组进行 combineArr
+// 如果两方都不是数组，则比较是否相同，相同则只返回一个
+type MergeValues<
+  One extends unknown[] | string,
+  Other extends unknown[] | string
+> = One extends unknown[]
+  ? Other extends unknown[]
+    ? CombineArr<One, Other>
+    : CombineArr<One, [Other]>
+  : Other extends unknown[]
+  ? CombineArr<[One], Other>
+  : One extends Other
+  ? One
+  : [One, Other]
+
+type t = 1 extends [2, 3, 1][number] ? true : false
+
+// 将多个参数合并。
+// 遍历他们所有的key
+// 如果此参数有多个，需要合并为数组
+type MergeParams<
+  OneParam extends Record<string, any>,
+  OtherParams extends Record<string, any>
+> = {
+  [key in keyof OneParam | keyof OtherParams]: key extends keyof OneParam
+    ? key extends keyof OtherParams
+      ? MergeValues<OneParam[key], OtherParams[key]>
+      : OneParam[key]
+    : key extends keyof OtherParams
+    ? OtherParams[key]
+    : never
+}
+
+// 用于对单个的 param 进行解析
+type ParseParam<Param extends string> =
+  Param extends `${infer key}=${infer value}` ? { [k in key]: value } : {}
+
+// queryString 可能有多个值，所以需要递归处理
+type ParseQueryString<Str extends string> =
+  Str extends `${infer Param}&${infer Rest}`
+    ? MergeParams<ParseParam<Param>, ParseQueryString<Rest>>
+    : ParseParam<Str>
 ```
