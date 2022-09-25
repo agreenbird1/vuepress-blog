@@ -137,3 +137,15 @@ date: '2022-09-09'
     - `Hash`：和整个项目的构建相关，只要项目文件有修改，整个项目构建的 `hash` 值就会更改
     - `Chunkhash`：和 `Webpack` 打包的 `chunk` 有关，不同的 `entry` 会产生出不同的 `chunkhash`
     - `Contenthash`：根据文件内容来定义 `hash`，文件内容不变，则 `contenthash` 不变
+
+13. module（组件、模块）、chunk（块）、bundle（包、捆）的区别？
+
+- module: 只要是文件，都是一个module
+
+- chunk：代码块，是webpack根据功能拆分出来的（chunk是无法在打包结果中看到的，打包结果中看到的是bundle），包含三种情况:
+
+    - 你的项目入口(entry)
+    - 通过import()动态引入的代码
+    - 通过splitChunks拆分出来的代码
+
+- bundle:bundle是webpack打包之后的各个文件，一般就是和chunk是一对一的关系，bundle就是对chunk进行编译压缩打包等处理之后的产出。
