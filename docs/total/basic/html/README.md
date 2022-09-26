@@ -186,7 +186,7 @@ date: '2022-08-17'
     - 单线程，js下载会阻塞页面渲染
     - `defer`：下载和加载都是异步的,它在文档解析后但在触发 `DOMContentLoaded` 之前执行。，如果有多个，会根据书写的顺序进行下载
     - `async`：下载是异步的，加载还是同步的（而且如果存在多个 async 的时候，它们之间的**执行顺序也不确定**，完全依赖于网络传输结果，谁先到执行谁。）
-    ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b0a8a139519f46dfa2d1992c58eb5397~tplv-k3u1fbpfcp-zoom-in-crop-mark:3024:0:0:0.awebp)
+    ![](/js/defer.png)
 
 
 16. src 和 href的区别
