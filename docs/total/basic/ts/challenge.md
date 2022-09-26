@@ -274,3 +274,24 @@ type ParseQueryString<Str extends string> =
     ? MergeParams<ParseParam<Param>, ParseQueryString<Rest>>
     : ParseParam<Str>
 ```
+
+14. CurryFn
+
+```typescript
+// 获取柯里化后的函数的类型
+// 比如:
+(a: number, b: number, c: number) => void
+(a: number) => (b: number) => (c: number) => void
+
+// 循环参数进行构造,每一个参数一个返回函数
+type GetCurried<Params, Return> = Params extends [infer First, ...infer Rest]
+  ? (arg: First) => GetCurried<Rest, Return>
+  : Return
+
+// 约定函数类型
+type CurryFn<Fn extends Function> = Fn extends (
+  ...args: infer Params
+) => infer Return
+  ? GetCurried<Params, Return>
+  : never
+```

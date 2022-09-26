@@ -23,7 +23,7 @@ date: '2022-08-17'
         ```
 
     2. 接口（``Interface``）：用于描述函数、对象以及构造器的结构
-    
+
     3. 枚举（````）：一系列值的复合
         ```typescript
          Transpiler {
@@ -50,7 +50,7 @@ date: '2022-08-17'
 
     按照官网的话说
 
-   > Almost all features of an `interface` are available in `type`, the key distinction is that a type cannot be re-opened to add new properties vs an interface which is always extendable. 
+   > Almost all features of an `interface` are available in `type`, the key distinction is that a type cannot be re-opened to add new properties vs an interface which is always extendable.
    翻译总结：能够使用interface定义的，大都能被被type定义。但是接口一直都是可以被扩展的，但type不一定。
 
    `type` 通过 & 来进行扩展，而 `interface` 通过继承  `extends`  来进行扩展。
@@ -66,7 +66,7 @@ date: '2022-08-17'
    }
    ```
 
-   建议：定义函数类型时候使用`type`，其他的时候能用`interface` 就用 `interface`，否则再使用`type` 
+   建议：定义函数类型时候使用`type`，其他的时候能用`interface` 就用 `interface`，否则再使用`type`
 
 
 5. typescript中的this？
@@ -76,17 +76,17 @@ date: '2022-08-17'
 6. interface如何给数组做声明？
     ```typescript
     // Array 声明
-    interface NumberArray { 
-        [index: number]: number; 
-    } 
+    interface NumberArray {
+        [index: number]: number;
+    }
     ```
 
 7. 联合类型(|)的特点？
 
     代表当前声明的值可以是传入的声明中的几个类型中的其中一个类型。
-    
+
 8. 交叉类型(&)的特点？
-    
+
     对于复合类型，其内容会包含在一起。而对于简单类型，就是取的相同的重合的交叉类型。
 
 9. `const` 枚举和普通枚举的区别？
@@ -100,9 +100,9 @@ date: '2022-08-17'
     declare global 为全局对象 window 增加新的属性
 
     ```typescript
-    declare global { 
-        interface Window { 
-            csrf: string; 
+    declare global {
+        interface Window {
+            csrf: string;
         }
     }
     ```
@@ -125,7 +125,7 @@ date: '2022-08-17'
     ```typescript
     let val = "hello" as const; // 此时 val 的类型为 "hello"
     val = "hi" // 会报错，类型不一致
-    
+
     // 但是实际上
     let val1 = "hello" // 此时 val1 的类型是 string
 
@@ -135,4 +135,12 @@ date: '2022-08-17'
     let y = [10, 20] as const
     // type '{ readonly text: "hello" }'
     let z = { text: "hello" } as const
+
+    // 在函数参数中时候
+    declare function Test1<T extends unknown[]>(arg: T): T
+    declare function Test2<T extends unknown[] | []>(arg: T): T
+    const a = Test1([1, 2, 3]) // a: number[]
+    const b = Test2([1, 2, 3]) // b:[number, number, number]
+    // 这里的 unknown[] | [] 就类似于 as const
+
     ```
