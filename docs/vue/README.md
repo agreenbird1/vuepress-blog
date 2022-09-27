@@ -115,6 +115,7 @@ vue中的渲染器被进行了二次封装，对不同的平台，传入不同�
 
    使用reactive、ref等设置响应式数据等等
 
+
 10. Object.defineProperty和Proxy的区别
 
    Object.defineProperty：`Object.defineProperty()` 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象。
