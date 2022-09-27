@@ -295,3 +295,28 @@ type CurryFn<Fn extends Function> = Fn extends (
   ? GetCurried<Params, Return>
   : never
 ```
+15. KebabCaseToCamelCase
+
+```typescript
+// aa-bb-cc => aaBbCc
+// 递归推导，将 - 后面的第一个字符换成大写
+type KebabCaseToCamelCase<Str extends string> =
+  Str extends `${infer First}-${infer Rest}`
+    ? `${First}${KebabCaseToCamelCase<Capitalize<Rest>>}`
+    : Str
+```
+
+16. CamelCaseToKebabCase
+
+```typescript
+// aaBbCc => aa-bb-cc
+// 循环找到大写字母，First extends Uppercase<First> 判断
+type CamelCaseToKebabCase<
+  Str extends string,
+  Res extends string = ''
+> = Str extends `${infer First}${infer Rest}`
+  ? First extends Uppercase<First>
+    ? `${Res}-${Lowercase<First>}${CamelCaseToKebabCase<Rest>}`
+    : CamelCaseToKebabCase<Rest, `${Res}${First}`>
+  : Res
+```

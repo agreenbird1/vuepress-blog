@@ -65,6 +65,8 @@ date: '2022-08-17'
 
    - `dnsprefetch`：预先进行DNS解析
 
+![](/js/prefetch.png)
+
 4. label标签
 
    相当于页面中某个元素的说明，当点击label的时候可以转焦到表单控件上
