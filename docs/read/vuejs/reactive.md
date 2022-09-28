@@ -87,7 +87,7 @@ function effect2 () {
 
 现在，我们可以梳理一下大致的脉络：**当有副作用函数使用了响应式的数据，我们需要将当前的副作用函数收集起来；当响应式的数据发生改变之后，我们又需要将副作用函数进行取出并重新执行。**
 
-![](C:\Users\86176\Desktop\roleTang\web\PCweb\frames\vue\vue_projects\vuepress-blog\docs\.vuepress\public\read\vue\响应式系统.png)
+![](/read/vue/响应式系统.png)
 
 梳理完流程之后，我们又面临了以下几个问题：
 
@@ -355,7 +355,7 @@ deps && deps.forEach(effect => effect())
 
 我们可以去MDN上[Set.prototype.forEach()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Set/forEach)找到它的规范。这个规定在[ECMAScript® 2023 Language Specification (tc39.es)](https://tc39.es/ecma262/multipage/keyed-collections.html#sec-set.prototype.foreach)，原文是：
 
-![](C:\Users\86176\Desktop\roleTang\web\PCweb\frames\vue\vue_projects\vuepress-blog\docs\.vuepress\public\read\vue\setForEach.png)
+![](/read/vue/setForEach.png)
 
 所以我们需要修改`trigger`函数如下：
 
@@ -423,7 +423,7 @@ obj.a = 2 // 注意这里
 
 此时我们可以用**栈**来解决这一问题。栈的特性便是后进先出，对于上述的`effect`函数，便是如此。执行外层的时候将`effect A`放入栈中，执行内存时再将`effect B`放入栈中。后续的`effect A`便是需要先被收集的，而`effect B`则在后面。这也保证了对应的执行顺序。
 
-![](C:\Users\86176\Desktop\roleTang\web\PCweb\frames\vue\vue_projects\vuepress-blog\docs\.vuepress\public\read\vue\effect栈.png)
+![](/read/vue/effect栈.png)
 
 这时我们便需要将响应系统的代码进行修改：
 
