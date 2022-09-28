@@ -326,3 +326,12 @@ grid-column/row-gap
 与协议、端口号等无关。
 
 [理解“同站”和“同源” (web.dev)](https://web.dev/same-site-same-origin/#same-site-cross-site)
+
+
+29. 不同窗口的浏览器存储
+
+不同窗口：
+
+    - sessionStorage设置的值不共享
+    - localStorage设置的值是共享的
+
