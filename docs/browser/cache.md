@@ -100,14 +100,15 @@ date: '2022-09-10'
       | **domain**     | 指定 cookie 所属域名，默认是当前域名                         |
       | **sameSite**   | 允许服务器要求某个 cookie 在跨站请求时不会被发送，防CSRF攻击。lax：Cookies允许与顶级导航一起发送，并将与第三方网站发起的GET请求一起发送（默认）。strict：完全禁止第三方cookie。none：默认都会携带。若设置为none需要配合`secure`属性。 |
       | **path**       | **指定 cookie 在哪个路径（路由）下生效，默认是 '/'**。 如果设置为 `/abc`，则只有 `/abc` 下的路由可以访问到该 cookie，如：`/abc/read`。 |
-      | **maxAge**     | cookie 失效的时间，单位秒。如果为整数，则该 cookie 在 maxAge 秒后失效。如果为负数，该 cookie 为临时 cookie ，关闭浏览器即失效，浏览器也不会以任何形式保存该 cookie 。如果为 0，表示删除该 cookie 。默认为 -1。 \- **比 expires 好用**。 |
+      | **maxAge**     | cookie 失效的时间，单位秒。如果为整数，则该 cookie 在 maxAge 秒后失效。如果为0或者负数，表示删除该 cookie 。 \- **比 expires 可靠**。 |
       | **expires**    | 过期时间，在设置的某个时间点后该 cookie 就会失效。 一般浏览器的 cookie 都是默认储存的，当关闭浏览器结束这个会话的时候，这个 cookie 也就会被删除 |
       | **secure**     | 该 cookie 是否仅被使用安全协议传输。安全协议有 HTTPS 等，在网络上传输数据之前先将数据加密。默认为false。 当 secure 值为 true 时，cookie 在 HTTP 中是无效，在 HTTPS 中才有效。 |
       | **httpOnly**   | 如果给某个 cookie 设置了 httpOnly 属性，则无法通过 JS 脚本 读取到该 cookie 的信息，但还是能通过 Application 中手动修改 cookie，所以只是在一定程度上可以防止 XSS 攻击，不是绝对的安全 |
 
+   如果没有指定expires和maxage，则是临时会话cookie，浏览器关闭失效。
 
 
-5. **localStorage**
+6. **localStorage**
 
    `本地存储`。针对一个域名，即在同一个域名下，会存储相同的一段localStorage，通常是以键值对的形式进行存储的。`getItem、setItem、removeItem、clear`
 
@@ -116,11 +117,11 @@ date: '2022-09-10'
       - 接口封装，操作方便
 
 
-6. **sessionStorage**
+7. **sessionStorage**
 
    `会话存储`。同localStorage，但是是会话级别的，网页关闭，sessionStorage便也不存在了
 
-7. **indexedDB**
+8. **indexedDB**
 
    非关系型的数据库，容量更大。
 
