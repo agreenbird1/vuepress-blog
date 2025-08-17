@@ -16,8 +16,5 @@
   },
   "devDependencies": {
     "vuepress-theme-reco": "^1.6.14"
-  },
-  "engines": {
-    "node": "=16"
   }
 }
