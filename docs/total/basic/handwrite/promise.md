@@ -38,153 +38,193 @@ promise 又被称作期约，通常用来描述一个异步操作是否成功或
 - `reject`：返回一个带有成功结果的`Promise`对象
 
 ```javascript
-class RTPromise {
-  // 三种状态
-  status = 'pending'
-  // 成功失败的回调
-  successCbs = []
-  errorCbs = []
-  constructor(executor) {
-    let resolve = (value) => {
-      if (this.status === 'pending') {
-        // 添加到异步任务
+class RtPromise {
+  // promise 的参数是传入一个有 resolve 和 reject 的回调函数
+  constructor(executer) {
+    this._state = 'pending' // fulFiled | rejected
+    this._value = undefined // 成功的返回值
+    this._reason = undefined // 失败的原因
+    this._onFulFiled = [] // 成功的回调函数
+    this._onRejected = [] // 失败的回调函数
+
+    const resolve = (value) => {
+      // 状态只设置一次
+      if (this._state === 'pending') {
+        // 如果指向本身，报错
+        if (value === this)
+          return reject(new Error('Chaining cycle detected for promise'))
+        // 如果是一个 promise，直接返回
+        if (value instanceof RtPromise)
+          return value.then(
+            (v) => resolve(v),
+            (r) => reject(r)
+          )
+        // thenable 对象没有处理
+        // 之前的调用也是在微任务队列里，所以执行前也还需要再次判定
         queueMicrotask(() => {
-          // 状态一经确定不可再改变
-          if (this.status === 'pending') {
-            this.status = 'fulfilled'
-            this.value = value
-            this.successCbs.forEach((cb) => cb())
+          if (this._state === 'pending') {
+            this._state = 'fulFiled'
+            this._value = value
+            // resolve执行后链式执行 then 的内容
+            this._onFulFiled.forEach((fn) => fn())
+            this._onFulFiled = []
           }
         })
       }
     }
-    let reject = (err) => {
-      if (this.status === 'pending') {
+    const reject = (reason) => {
+      if (this._state === 'pending') {
         queueMicrotask(() => {
-          if (this.status === 'pending') {
-            this.status = 'rejected'
-            this.err = err
-            this.errorCbs.forEach((cb) => cb())
+          if (this._state === 'pending') {
+            this._state = 'rejected'
+            this._reason = reason
+            this._onRejected.forEach((fn) => fn())
+            this._onRejected = []
           }
         })
       }
     }
-    executor(resolve, reject)
+
+    try {
+      executer(resolve, reject)
+    } catch (error) {
+      reject(error)
+    }
   }
-  then(onFulfilled, onRejected) {
-    // 解决没有参数的情况
-    onFulfilled = onFulfilled || ((v) => v)
+
+  then(onFulFiled, onRejected) {
+    onFulFiled = onFulFiled || ((v) => v)
     onRejected =
       onRejected ||
       ((err) => {
         throw err
       })
-    // then方法返回一个新的promise，即链式调用
-    return new RTPromise((resolve, reject) => {
-      // 同步时
-      if (this.status === 'fulfilled') {
-        resolve(onFulfilled(this.value)) // 将上一个then函数的值返回
-      }
-
-      if (this.status === 'rejected') {
-        reject(onRejected(this.err)) // 将上一个then函数的值返回
-      }
-      // 异步时候
-      if (this.status === 'pending') {
-        this.successCbs.push(() => {
-          resolve(onFulfilled(this.value))
+    // then 返回一个新的 promise
+    return new RtPromise((resolve, reject) => {
+      console.log(this._state)
+      // then 总是在 微任务 队列中执行
+      // 如果这里不加 queueMicrotask 包裹的话, executor 则是同步执行了
+      if (this._state === 'fulFiled') {
+        queueMicrotask(() => {
+          resolve(onFulFiled(this._value))
         })
-        this.errorCbs.push(() => {
-          reject(onRejected(this.err))
+      } else if (this._state === 'rejected')
+        queueMicrotask(() => {
+          reject(onRejected(this._reason))
+        })
+      else {
+        this._onFulFiled.push(() => {
+          queueMicrotask(() => {
+            resolve(onFulFiled(this._value))
+          })
+        })
+        this._onRejected.push(() => {
+          queueMicrotask(() => {
+            resolve(onFulFiled(this._value))
+          })
         })
       }
     })
   }
+  // 简写的 then
   catch(onRejected) {
     return this.then(undefined, onRejected)
   }
+  // 简写的 then
   finally(onFinally) {
-    // 不论成功失败都执行
     return this.then(
       () => onFinally(),
       () => onFinally()
     )
   }
-  static resolve(value) {
-    return new RTPromise((resolve) => resolve(value))
+  static resolve(val) {
+    // 如果是一个promise，直接返回
+    if (val instanceof RtPromise) return val
+    return new RtPromise((resolve) => resolve(val))
   }
-  static reject(err) {
-    return new RTPromise((undefined, reject) => reject(err))
+  static reject(reason) {
+    return new RtPromise((resolve, reject) => reject(reason))
   }
-  static all(RTPromises) {
-    return new RTPromise((resolve, reject) => {
-      const values = []
-      RTPromises.forEach((RTPromise) => {
-        RTPromise.then(
-          // 全部正确才返回
-          (res) => {
-            values.push(res)
-            if (values.length === RTPromises.length) resolve(values)
+  // 返回所有成功的结果
+  // 否则返回第一个失败的结果
+  static all(iterable) {
+    return new RtPromise((resolve, reject) => {
+      let remaining = 0
+      let index = 0
+      let res = []
+      for (const promise of iterable) {
+        const i = index++
+        remaining++
+        promise.then(
+          (val) => {
+            res[i] = val
+            if (--remaining === 0) resolve(new AggregateError(res))
           },
-          // 有一个错误就抛出错误
-          (err) => reject(err)
+          reject
         )
-      })
+      }
+      if (index === 0) resolve(res)
     })
   }
-
-  static race(RTPromises) {
-    return new RTPromise((resolve, reject) => {
-      RTPromises.forEach((RTPromise) => {
-        RTPromise.then(
-          // 谁先谁出
-          (res) => resolve(res),
-          (err) => reject(err)
-        )
-      })
-    })
-  }
-
-  // 返回所有执行完成后的结果
-  static allSettled(RTPromises) {
-    return new RTPromise((resolve, reject) => {
-      const results = []
-      RTPromises.forEach((RTPromise) => {
-        RTPromise.then(
-          (res) => {
-            results[idx] = {
-              status: 'fulfilled',
-              value: res,
-            }
-            // 需要按照对应的下标返回
-            // 同时所有的内容都已完成才返回
-            if(results.every(res => !!res)) resolve(results)
-          },
-          (err) => {
-            results[idx] = {
-              status: 'rejected',
-              reason: err,
-            }
-            if(results.every(res => !!res)) resolve(results)
+  // 返回第一个成功的结果
+  // 如果所有都被拒绝，返回被拒绝的数组
+  static any(iterable) {
+    return new RtPromise((resolve, reject) => {
+      const reasons = []
+      let remaining = 0
+      let index = 0
+      let res = []
+      for (const promise of iterable) {
+        const i = index++
+        remaining++
+        promise.then(
+          resolve,
+          (reason) => {
+            reasons[i] = reason
+            if (--remaining === 0) reject(reasons)
           }
         )
-      })
+      }
     })
   }
-
-  // 返回第一个被接收的 promise
-  static any(RTPromises) {
-    const errCbs = 0
-    return new RTPromise((resolve, reject) => {
-      RTPromises.forEach((RTPromise) => {
-        RTPromise.then(res => {
-          resolve(res)
-        },err => {
-          errCbs++
-          // 当所有的都被拒绝
-          if(errCbs === RTPromises.length) reject(new AggregateError(err))
-        })
-      })
+  // 返回所有结果
+  static allSettled(iterable) {
+    return new RtPromise((resolve, reject) => {
+      const res = []
+      let remaining = 0
+      let index = 0
+      for (const promise of iterable) {
+        const i = index++
+        remaining++
+        promise.then(
+          (value) => {
+            res[i] = {
+                value,
+                status: "fulfilled"
+            }
+            if (--remaining === 0) resolve(res)
+          },
+          (reason) => {
+            res[i] = {
+                reason,
+                status: "rejected"
+            }
+            if (--remaining === 0) resolve(res)
+          }
+        )
+      }
+      if (index === 0) resolve([]);
+    })
+  }
+  // 返回第一个结果
+  static race(iterable) {
+    return new RtPromise((resolve, reject) => {
+      for (const promise of iterable) {
+        promise.then(
+          resolve,
+          reject
+        )
+      }
     })
   }
 }
