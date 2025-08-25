@@ -1,7 +1,7 @@
 ---
 title: Promise手写
 author: RoleTang
-date: '2022-07-25'
+date: '2025-08-25'
 ---
 
 手写 promise，promise.all 等方法
@@ -33,9 +33,9 @@ promise 又被称作期约，通常用来描述一个异步操作是否成功或
 
 - `race`：接收同上，返回第一个执行的结果
 
-- `resolve`：返回一个带有拒原因的`Promise`对象
+- `resolve`：返回一个带有成功结果的`Promise`对象
 
-- `reject`：返回一个带有成功结果的`Promise`对象
+- `reject`：返回一个带有拒原因的`Promise`对象
 
 ```javascript
 class RtPromise {
@@ -158,7 +158,7 @@ class RtPromise {
         promise.then(
           (val) => {
             res[i] = val
-            if (--remaining === 0) resolve(new AggregateError(res))
+            if (--remaining === 0) resolve(res)
           },
           reject
         )
@@ -167,7 +167,7 @@ class RtPromise {
     })
   }
   // 返回第一个成功的结果
-  // 如果所有都被拒绝，返回被拒绝的数组
+  // 如果所有都被拒绝，返回AggregateError被拒绝的数组
   static any(iterable) {
     return new RtPromise((resolve, reject) => {
       const reasons = []
@@ -181,7 +181,7 @@ class RtPromise {
           resolve,
           (reason) => {
             reasons[i] = reason
-            if (--remaining === 0) reject(reasons)
+            if (--remaining === 0) reject(new AggregateError(reasons))
           }
         )
       }
