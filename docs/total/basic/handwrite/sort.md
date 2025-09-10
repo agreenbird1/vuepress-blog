@@ -27,14 +27,67 @@ date: '2025-09-10'
 
 ### 快速排序
 ```js
+/**
+ * 选择一点作为基准
+ * 将大于基准点的放在后面，小于基准点的放在前面
+ * 循环往复直到全部处理
+ */
 const quickSort = (arr) => {
+    // 额外空间的快速排序
+    if (arr.length <= 1) return arr
+    const benchmark = arr[0]
+    const left = []
+    const right = []
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i] < benchmark) left.push(arr[i])
+        else right.push(arr[i])
+    }
+    return [...quickSort(left), benchmark, ...quickSort(right)]
+}
 
+const quickSortInPlace = (arr, left, right) => {
+    if (left >= right) return
+    const partition = (arr, left, right) => {
+        const benchmark = arr[left]
+        let i = left + 1
+        // 将小于benchmark的值放在i之前，否则i之后，以此达到分组的目的
+        for (let j = i; j <= right; j++) {
+            if (arr[j] < benchmark) {
+                // 解构赋值
+                ;[arr[j], arr[i]] = [arr[i], arr[j]]
+                i++
+            }
+        }
+        // 将 i 与基准点交换，后续不再处理基准点，位置已经确定了
+        ;[arr[left], arr[i - 1]] = [arr[i - 1], arr[left]]
+        return i - 1
+    }
+    const point = partition(arr, left, right)
+    quickSortInPlace(arr, left, point - 1)
+    quickSortInPlace(arr, point + 1, right)
+    return arr
 }
 ```
 ### 归并排序
 
 ### 冒泡排序
+```js
+/**
+ * 冒泡排序
+ * 相邻元素两两比较，把大的元素一步步“冒”到右边（末尾），直到整个数组有序。
+ */
+const bubbleSort = (arr) => {
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr.length - 1 - i; j++) {
+            if (arr[j] > arr[j + 1]) {
+                [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+            }
+        }
+    }
+    return arr;
+}
 
+```
 ### 选择排序
 
 ### 堆排序
