@@ -97,6 +97,7 @@ module.exports = {
             'handwrite/promise',
             'handwrite/reduce',
             'handwrite/array',
+            'handwrite/sort',
           ],
         },
         {
