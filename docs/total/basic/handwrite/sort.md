@@ -69,6 +69,41 @@ const quickSortInPlace = (arr, left, right) => {
 }
 ```
 ### 归并排序
+```js
+/**
+ * 分治思想
+ * 将数组拆分为最小单元也就是 1 个元素，此时即有序
+ * 将最小单元依次合并，每次合并的结果都是有序的，最后拿到值
+ */
+const mergeSort = (arr) => {
+    if (arr.length < 2) return arr;
+    // 直接拆分为最小单元
+    let dividingArrs = arr.map(i => [i]);
+    const merge = (arr1, arr2) => {
+        const res = [];
+        let i = 0;
+        let j = 0;
+        // 双指针按大小排序
+        while (i < arr1.length && j < arr2.length) {
+            if (arr1[i] <= arr2[j]) res.push(arr1[i++]);
+            else res.push(arr2[j++]);
+        }
+        // 跳出循环时必定有一个数组没有到达末尾，需要添加到res中
+        if (i !== arr1.length) res.push(...arr1.slice(i));
+        if (j !== arr2.length) res.push(...arr2.slice(j));
+        return res;
+    }
+    while (dividingArrs.length > 1) {
+        const next = [];
+        for (let i = 0; i < dividingArrs.length; i += 2) {
+            if (i + 1 === dividingArrs.length) next.push(dividingArrs[i]);
+            else next.push(merge(dividingArrs[i], dividingArrs[i + 1]));
+        }
+        dividingArrs = next;
+    }
+    return dividingArrs[0];
+}
+```
 
 ### 冒泡排序
 ```js
@@ -78,6 +113,7 @@ const quickSortInPlace = (arr, left, right) => {
  */
 const bubbleSort = (arr) => {
     for (let i = 0; i < arr.length; i++) {
+        // 一轮比较决定一个最大值
         for (let j = 0; j < arr.length - 1 - i; j++) {
             if (arr[j] > arr[j + 1]) {
                 [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
@@ -89,7 +125,50 @@ const bubbleSort = (arr) => {
 
 ```
 ### 选择排序
-
+```js
+/**
+ * 每次选择一个最小的放在最前面
+ * 一轮选择定一个值
+ */
+const selectSort = (arr) => {
+    if (arr.length < 2) return arr
+    for (let i = 0; i < arr.length; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+            // 将小值与位置 i 的值交换
+            if (arr[j] < arr[i]) [arr[i], arr[j]] = [arr[j], arr[i]]
+        }
+    }
+    return arr
+}
+```
 ### 堆排序
+todo: 等刷到堆的算法题后补充
 
 ### 希尔排序
+```js
+/**
+ * 优化的插入排序
+ * 每次指定一个 gap，以这个 gap 为一组进行插入排序，当 gap 为 1 的时候接近有序
+ */
+const shellSort = (arr) => {
+    const n = arr.length
+    let gap = Math.floor(n / 2) // 初始步长（一般取 n/2）
+
+    while (gap > 0) {
+        // 对间隔为 gap 的子序列做插入排序
+        for (let i = gap; i < n; i++) {
+            let temp = arr[i]
+            let j = i
+            // 类似插入排序，但不是相邻比较，而是隔 gap 比较
+            while (j >= gap && arr[j - gap] > temp) {
+                arr[j] = arr[j - gap]
+                j -= gap
+            }
+            arr[j] = temp
+        }
+        gap = Math.floor(gap / 2) // 缩小 gap
+    }
+
+    return arr
+}
+```
