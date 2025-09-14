@@ -264,3 +264,69 @@ console.log(get(object, ['a', '0', 'b', 'c']))
 console.log(get(object, 'a.b.c', 'default'))
 // => 'default'
 ```
+
+```js
+/**
+ * flatMap 是先 map 再 flat
+ * @param {Function} callback - 处理函数
+ * @param {Any} thisArg - 处理时候的this
+ */
+Array.prototype.flatMap = function (callback, thisArg) {
+    if (typeof callback !== "function") throw new TypeError();
+    _this = Object(thisArg || this);
+    console.log(_this)
+    let res = [];
+    for (let i = 0; i < _this.length; i++) {
+        const mapped = callback(_this[i]);
+        if (Array.isArray(mapped)) res.push(...mapped);
+        else res.push(mapped);
+    }
+    return res;
+}
+
+const arr = [1, 2, 3, 4];
+console.log(arr.flatMap((x) => x + 1));
+console.log(arr.flatMap((x) => [x, x * 2]));
+```
+
+```js
+const once = (func) => {
+  let result;
+  let revoked = false;
+  return function (...args) {
+    if (revoked) return result;
+    revoked = true;
+    result = func.apply(this, args); // 保留 this
+    return result;
+  }
+};
+```
+
+```js
+// 无限累加的 sum
+// 利用闭包和高阶函数
+// 重写valueOf，当一个对象要参与运算或比较时，JS 引擎需要把它转换成原始值（primitive）。这时候会触发一个叫 ToPrimitive，会调用对象的valueOf和toString方法
+function sum(...args) {
+    // 用闭包存储累加和
+    let total = args.reduce((a, b) => a + b, 0)
+    // 定义一个可调用的函数
+    function innerSum(...nextArgs) {
+        total += nextArgs.reduce((a, b) => a + b, 0)
+        return innerSum // 返回自己，实现链式调用
+    }
+    // 重写 valueOf（或 toString），在需要转为数字时触发
+    innerSum.valueOf = function () {
+        return total
+    }
+    return innerSum
+}
+console.log(sum(1)(2)(3) == 6) // true
+console.log(sum(1, 2, 3) + sum(4, 5))
+console.log(sum(10) * sum(10))
+sum(1, 2, 3).valueOf(); //6
+sum(2, 3)(2).valueOf(); //7
+sum(1)(2)(3)(4).valueOf(); //10
+sum(2)(4, 1)(2).valueOf(); //9
+sum(1)(2)(3)(4)(5)(6).valueOf(); // 21
+
+```
