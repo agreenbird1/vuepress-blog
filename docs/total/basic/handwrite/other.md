@@ -207,3 +207,60 @@ Promise.map = (promises, concurrent) => {
 }
 
 ```
+
+```js
+/**
+ * 参数
+ * object (Object): 要检索的对象。
+ * path (Array|string): 要获取属性的路径。
+ * [defaultValue] (*): 如果解析值是 undefined ，这值会被返回。
+ * @returns 根据 object对象的path路径获取值。 如果解析 value 是 undefined 会以 defaultValue 取代。
+ */
+/**
+ * 参数
+ * object (Object): 要检索的对象。
+ * path (Array|string): 要获取属性的路径。
+ * [defaultValue] (*): 如果解析值是 undefined ，这值会被返回。
+ * @returns 根据 object对象的path路径获取值。 如果解析 value 是 undefined 会以 defaultValue 取代。
+ */
+const get = (context, path, defaultValue = undefined) => {
+    // 把字符串路径解析成数组路径
+    const parsePath = (path) => {
+        if (Array.isArray(path)) return path
+        const pathArr = []
+        let pathStr = ''
+        const pushPathStr = () => {
+            if (pathStr !== '') pathArr.push(pathStr)
+            pathStr = ''
+        }
+        for (let i = 0; i < path.length; i++) {
+            const char = path[i]
+            if (char === '.' || char === '[' || char === ']') pushPathStr()
+            else pathStr += char
+        }
+        pushPathStr()
+        return pathArr
+    }
+    // 统一为数组形式
+    const pathArr = parsePath(path)
+    // 遍历路径
+    let res = context
+    for (let i = 0; i < pathArr.length; i++) {
+        if (res == null || !(pathArr[i] in res)) {
+            return defaultValue
+        }
+        res = res[pathArr[i]]
+    }
+    // 区分 undefined 和 路径不存在
+    return res === undefined ? defaultValue : res
+}
+
+var object = { a: [{ b: { c: 3 } }] }
+console.log(get(object, 'a[0].b.c'))
+console.log(get(object, 'a[0].b.c'))
+// => 3
+console.log(get(object, ['a', '0', 'b', 'c']))
+// => 3
+console.log(get(object, 'a.b.c', 'default'))
+// => 'default'
+```

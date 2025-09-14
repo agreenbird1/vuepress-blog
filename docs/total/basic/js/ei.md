@@ -1,7 +1,7 @@
 ---
 title: javascript基础
 author: RoleTang
-date: '2022-08-16'
+date: '2025-09-14'
 ---
 
 1. 深入理解微任务、事件循环
@@ -1148,3 +1148,123 @@ undefined是一个全局对象的属性，指当前变量还未定义
   MAX_SAFE_INTEGER 是一个值为 9007199254740991 的常量。因为 Javascript 的数字存储使用了 IEEE 754 中规定的双精度浮点数数据类型，而这一数据类型能够安全存储 -(2^53 - 1) 到 2^53 - 1 之间的数值（包含边界值）。
 
 72. 一个web 音乐的 app 打开了多个页面。用户点击的播放按钮可能是任意一个打开的页面的
+
+73. Generator 对象由生成器函数返回并且它符合可迭代协议和迭代器协议。Generator 是隐藏类 Iterator 的子类。
+    ```js
+    function* generator() {
+        console.log('1')
+        yield 1
+        console.log('2')
+        yield 2
+        console.log('3')
+        yield 3
+    }
+
+    const gen = generator(); // "Generator { }"
+
+    console.log(gen.next().value); // 1
+    console.log(gen.next().value); // 2
+    console.log(gen.next().value); // 3
+    // 1. Generator - 无限序列
+    function* fibonacci() {
+        let [a, b] = [0, 1];
+        while (true) {
+            yield a;
+            [a, b] = [b, a + b];
+        }
+    }
+
+    for (const num of fibonacci()) {
+        if (num > 50) break;
+        console.log(num);
+    }
+    ```
+
+74. AsyncGenerator 对象由异步生成器函数返回，并且它符合异步可迭代协议和异步迭代器协议。异步生成器方法总是产生 Promise 对象。AsyncGenerator 是隐藏类 AsyncIterator 的子类。
+    ```js
+    async function* foo() {
+        yield await Promise.resolve("a");
+        yield await Promise.resolve("b");
+        yield await Promise.resolve("c");
+    }
+
+    let str = "";
+
+    async function generate() {
+    for await (const val of foo()) {
+        str = str + val;
+    }
+    console.log(str);
+    }
+
+    generate();
+    // Expected output: "abc"
+
+    async function* createAsyncGenerator() {
+        yield await Promise.resolve(1);
+        yield await Promise.resolve(2);
+        yield await Promise.resolve(3);
+    }
+    const asyncGen = createAsyncGenerator();
+    asyncGen.next().then((res) => console.log(res.value)); // 1
+    asyncGen.next().then((res) => console.log(res.value)); // 2
+    asyncGen.next().then((res) => console.log(res.value)); // 3
+
+
+    // 异步任务。假设它在实践中做了一些更有用的事情。
+    function delayedValue(time, value) {
+        return new Promise((resolve /*, reject*/) => {
+            setTimeout(() => resolve(value), time)
+        })
+    }
+
+    async function* generate() {
+        console.log('开始')
+        yield delayedValue(2000, 1)
+        yield delayedValue(1000, 2)
+        yield delayedValue(500, 3)
+        yield delayedValue(250, 4)
+        yield delayedValue(125, 5)
+        yield delayedValue(50, 6)
+        console.log('全部完成！')
+    }
+
+    async function main() {
+        for await (const value of generate()) {
+            console.log('值', value)
+        }
+    }
+
+    main().catch((e) => console.error(e))
+    ```
+
+75. fetch的credentials和cookie的samesite的区别是什么
+    1. fetch.credentials
+
+        这是 前端（浏览器端 JS 发请求时） 的配置，控制请求里 是否带上已有的凭据（Cookie、HTTP Auth、TLS Client Cert 等）。
+
+        取值有 3 种：
+
+        - "omit"：不带 Cookie（即使是同源）。
+
+        - "same-origin"（默认）：同源请求带 Cookie，跨站请求不带。
+
+        - "include"：无论同源还是跨站，都带 Cookie。
+    2. Cookie 的 SameSite
+
+        这是 后端（服务器下发 Cookie 时） 的属性，控制这个 Cookie 在跨站请求时是否能被携带。
+
+        取值有 3 种：
+
+        - Strict：最安全，只有「用户直接访问该站点」时才带 Cookie，跨站请求完全不会带。
+
+        - Lax（默认）：跨站请求大多数情况不带，但 顶级导航 GET 请求（比如 \<a href> 跳转）可以带。
+
+        - None：任何跨站请求都能带 Cookie，但必须配合 Secure（只能在 HTTPS 下传输）。
+    3. 区别与关系
+
+        fetch.credentials 是 浏览器端请求策略（我愿不愿意带）。
+
+        SameSite 是 Cookie 本身的限制（这个 Cookie 允许不允许被带）。
+
+        🚨 即使你在 fetch 里设置了 credentials: "include"，如果 Cookie 被标记为 SameSite=Strict，在跨站请求时它依然不会被带上。
