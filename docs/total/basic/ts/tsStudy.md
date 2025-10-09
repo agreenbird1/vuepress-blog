@@ -1,7 +1,7 @@
 ---
 title: TypeScript初探
 author: RoleTang
-date: '2022-08-17'
+date: '2025-10-09'
 ---
 
 
@@ -62,7 +62,7 @@ date: '2022-08-17'
 
 3. infer
 
-   推到类型，简单的使用
+   infer 表示在 extends 条件语句中待推断的类型变量。
 
    ```typescript
    type FirstType<Tuple extends unknown[]> = Tuple extends [infer T, ...infer R]
@@ -116,6 +116,12 @@ date: '2022-08-17'
       ```typescript
       type T = Exclude<"a" | "b" | "c", "a" | "b">; // 作用于联合类型
       // type Exclude<T, U> = T extends U ? never : T
+      type aa = "a" | "b" | "c" extends "a" | "b" ? never : "a" | "b" | "c"
+      // 这里的 T 是 "c"，但 aa 是 "a" | "b" | "c"
+      // 因为存在 条件类型分发
+      // 对于 T，相当于 "a" extends "a" | "b" …… "c" extends "a" | "b"，结果是 never | never | "c" => "c"
+      // 对于 aa "a" | "b" | "c" extends "a" | "b" 显然不成立
+
       // 那么对于上述例子
       type D = Exclude<IPeople, IAnimal>; // D 其实就是 IPeople
       type E = Exclude<IAnimal, IPeople>; // never
@@ -171,17 +177,9 @@ date: '2022-08-17'
    // 日志输出更友好，也有更严格的类型检查
    enum Boolean {
      YSE = "YES",
-     NO,
+     NO = "NO",
    }
-
-
-   enum Boolean {
-     YSE = 2,
-     NO,
-   }
-
-   // 那么此时 NO 就会接着上面最近的一个开始
-   // Boolean.NO === 2  true
+   // 如果只对 YSE 赋值， NO 不赋值则会报错，除非将 NO 放在 YSE 之前
    ```
   同时枚举能够包含计算成员，比如
   ```typescript
@@ -310,11 +308,11 @@ console.log(test.getName()); // Tuesday
    }
 
    // 是可以的，因为 printColor 使用 IRedApple 进行约束，但是 printName 只用到了父类型的属性和方法，它仍然是类型安全的。 => 这就是逆变，函数的参数有逆变的性质（而返回值是协变的，也就是子类型可以赋值给父类型）。
-   // printColor = printName // √
+   printColor = printName // √
 
    // printName 函数声明时候使用的是 IApple 进行约束，但是按照 IRedApple 的方式进行访问，那么就不安全了（存在 IApple 不存在的属性）。
    // 如果需要完成赋值不报错，关闭 strictFunctionTypes 选项（tsconfig.json中），就可以完成双向协变。
-   // printName = printColor // ×
+   printName = printColor // ×
    ```
 
    参数的位置是逆变的，也就是被赋值的函数参数要是赋值的函数参数的子类型。这样理解，**函数中的操作很多，有可能会操作一些父类没有子类自身扩展的属性、方法。如果参数作为作为子类，子类的东西是包含父类的，父类有的东西，子类早已经继承，所以函数里面的操作并不影响。**
@@ -445,14 +443,18 @@ type isExtends = s extends f ? true : false // true！
 6. 将_连接的string类型改为小驼峰类型
 
    ```typescript
-   type _str = "str_Str_Str";
-   // 这里将用 `` 模板字符串将字符串划分开来，再进行类型的推导。
-   type toTuofeng<str extends string> =
-     str extends `${infer s1}_${infer s2}${infer s3}`
-       ? `${s1}${Uppercase<s2>}${toTuofeng<s3>}`
-       : str;
+   type _str = "str_Atr_Btr";
+    // 这里将用 `` 模板字符串将字符串划分开来，再进行类型的推导。
+    type toTuofeng<str extends string> =
+    // s1 是 _ 前的 字符，可以为空
+    // s2 是 _ 后的第一个字符
+    // s3 是剩余字符
+    str extends `${infer s1}_${infer s2}${infer s3}`
+        ? `${s1}_${Lowercase<s2>}${toTuofeng<s3>}`
+        : str;
 
-   type str = toTuofeng<_str>;
+    type str = toTuofeng<_str>;
+    // str_atr_btr
    ```
 
 7. 联合类型的运算
@@ -462,6 +464,7 @@ type isExtends = s extends f ? true : false // true！
    ```ts
    type union = "a" | "b" | "c";
 
+   // 条件类型分发
    type UpperCaseA<Item extends string> = Item extends "a"
      ? Uppercase<Item>
      : Item;
