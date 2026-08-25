@@ -160,6 +160,9 @@ date: '2025-09-14'
     {"a":3,"b":4,"c":null,"e":666}
     ```
 
+    - 当在循环引用时会抛出异常TypeError ("cyclic object value")（循环对象值）
+    - 当尝试去转换 BigInt 类型的值会抛出TypeError ("BigInt value can't be serialized in JSON")（BigInt 值不能 JSON 序列化
+
 11. js内存管理
 
     `栈`：存放普通数据类型
@@ -259,13 +262,13 @@ date: '2025-09-14'
 
 20. ??=、 ?.、  &&=、  ||=
 
-    ??=(逻辑空赋值): 只有赋值左边为null和undefined时候才生效
+    ??=(逻辑空赋值): 只有赋值左边为null和undefined时候才生效 x ?? (x = y);
 
     ?. : 可选链操作符号。允许读取位于连接对象链深处的属性的值，而不必明确验证链中的每个引用是否有效。可以为null和undefined，此时该表达式短路返回值是 `undefined`。
 
-    &&=(逻辑与赋值):只有左边为真才会返回右边的结果，否则返回左边的结果
+    &&=(逻辑与赋值):只有左边为真才会返回右边的结果，否则返回左边的结果 x && (x = y);
 
-    ||=(逻辑或赋值):若左边为真，返回左边的结果，否则返回右边的结果。仅当左边为`falsy`值（认定转换为false）的时候赋值。
+    ||=(逻辑或赋值):若左边为真，返回左边的结果，否则返回右边的结果。仅当左边为`falsy`值（认定转换为false）的时候赋值 x || (x = y);
 
 21. 模块化、工程化
 
@@ -292,10 +295,19 @@ date: '2025-09-14'
 
     - 两者的区别
 
-      2.  CommonJS 加载的是一个对象（即`module.exports`属性），该对象只有在脚本运行完才会生成（**运行时加载**）。而 ES6 模块不是对象，它的对外接口只是一种静态定义，在代码静态解析阶段就会生成（**编译时加载**）。
-      3.  Commonjs导出的是一个对象，是module.exports的。而esm导出的是变量的引用
-      4. esm的import语句必须存在在模块的顶部，且导入的值是readOnly的。
-      5. 因为两个模块加载机制的不同，所以在对待循环加载的时候，它们会有不同的表现。CommonJS遇到循环依赖的时候，只会输出已经执行的部分，后续的输出或者变化，是不会影响已经输出的变量。而ES6模块相反，使用import加载一个变量，变量不会被缓存，真正取值的时候就能取到最终的值；
+        | 对比项 | CJS | ESM |
+        |---|---|---|
+        | 导入 | `require()` | `import` |
+        | 导出 | `module.exports`、`exports` | `export`、`export default` |
+        | 加载方式 | 默认同步加载 | 支持异步加载和静态分析 |
+        | 依赖确定时间 | 代码执行时 | 模块解析阶段 |
+        | 导入值 | 通常是导出对象或值 | Live Binding（实时绑定） |
+        | Tree Shaking | 较困难 | 支持较好 |
+        | 浏览器原生支持 | 不支持 | 支持 |
+        | 顶层 `await` | 不支持 | 支持 |
+        | `__dirname` / `__filename` | 直接可用 | 默认不存在 |
+        | 循环引用 | 返回未执行完成的 `exports` | 建立绑定，过早访问可能触发 TDZ |
+        | Node 文件后缀 | `.cjs` | `.mjs` |
 
 22. Object.defineProperty
 
@@ -399,7 +411,7 @@ date: '2025-09-14'
 
     weakset
 
-    1. 成员都是对象（弱引用）；
+    1. 成员都是对象、非全局注册的symbol；
     2. 成员都是弱引用，随时可以消失（不计入垃圾回收机制）。可以用来保存 DOM 节点，不容易造成内存泄露；
     3. 不能遍历，方法有add、delete、has；
 
@@ -411,7 +423,7 @@ date: '2025-09-14'
 
     weakmap
 
-    1. 只接收对象或者非全局symbol为键名（null 除外），不接受其他类型的值作为键名；
+    1. 只接收对象、非全局注册的symbol为键名（null 除外），不接受其他类型的值作为键名；
     2. 键名指向的对象，不计入垃圾回收机制；
     3. 不能遍历，方法同get、set、has、delete  size；
 
@@ -456,7 +468,7 @@ date: '2025-09-14'
     - obj[res]可以使用变量读取
     - obj['res']可以动态访问（es6语法：计算属性名），拼接字符串obj['r' + 'e' + 's']
 
-35. 如 果 你 想 禁 止 一 个 对 象 添 加 新 属 性 并 且 保 留 已 有 属 性， 可 以 使 用 Object.prevent  Extensions(..)：
+35. 如 果 你 想 禁 止 一 个 对 象 添 加 新 属 性 并 且 保 留 已 有 属 性， 可 以 使 用 Object.preventExtensions(..)：
 
     ```javascript
     var myObject = {  a:2  };
@@ -499,6 +511,12 @@ date: '2025-09-14'
 
 
 37. 介绍一下原型链，从构造函数到原型，再到原型链，盗用构造函数，原型式继承，寄生式继承
+
+    https://zh.wikipedia.org/wiki/%E5%9F%BA%E4%BA%8E%E5%8E%9F%E5%9E%8B%E7%BC%96%E7%A8%8B
+
+    https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Extensions/Advanced_JavaScript_objects/Object_prototypes
+
+    https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain
 
     [【前端工程师面试宝典】学习说明_互联网校招面试真题面经汇总_牛客网 (nowcoder.com)](https://www.nowcoder.com/tutorial/96/1678a0fd35cd4db486af18589e34e4d4)
 
@@ -597,46 +615,46 @@ date: '2025-09-14'
 
 38. == 和 === 的区别
 
-`==`在比较时候会进行`隐式转换`，然后再比较
+    `==`在比较时候会进行`隐式转换`，然后再比较
 
-`隐式转换详解`：
+    `隐式转换详解`：
 
-- 如果两个操作数都是对象，则仅当两个操作数都引用同一个对象时才返回`true`。
-- 如果一个操作数是`null`，另一个操作数是`undefined`，则返回`true`。
-- 如果两个操作数是不同类型的，就会尝试在比较之前将它们转换为相同类型：
-  - 当**数字与字符串**进行比较时，会尝试将字符串转换为数字值。
-  - 如果操作数之一是**Boolean**，则将布尔操作数转换为1或0。
-    - 如果是`true`，则转换为`1`。
-    - 如果是 `false`，则转换为`0`。
-  - 如果操作数之一**是对象**，另一个是数字或字符串，会尝试使用对象的`valueOf()`和`toString()`方法将对象转换为原始值。
-- 如果操作数具有相同的类型，则将它们进行如下比较：
-  - `String`：`true`仅当两个操作数具有相同顺序的相同字符时才返回。
-  - `Number`：`true`仅当两个操作数具有相同的值时才返回。`+0`并被`-0`视为相同的值。如果任一操作数为`NaN`，则返回`false`。
-  - `Boolean`：`true`仅当操作数为两个`true`或两个`false`时才返回`true`。
+    - 如果两个操作数都是对象，则仅当两个操作数都引用同一个对象时才返回`true`。
+    - 如果一个操作数是`null`，另一个操作数是`undefined`，则返回`true`。
+    - 如果两个操作数是不同类型的，就会尝试在比较之前将它们转换为相同类型：
+    - 当**数字与字符串**进行比较时，会尝试将字符串转换为数字值。
+    - 如果操作数之一是**Boolean**，则将布尔操作数转换为1或0。
+        - 如果是`true`，则转换为`1`。
+        - 如果是 `false`，则转换为`0`。
+    - 如果操作数之一**是对象**，另一个是数字或字符串，会尝试使用对象的`valueOf()`和`toString()`方法将对象转换为原始值。
+    - 如果操作数具有相同的类型，则将它们进行如下比较：
+    - `String`：`true`仅当两个操作数具有相同顺序的相同字符时才返回。
+    - `Number`：`true`仅当两个操作数具有相同的值时才返回。`+0`并被`-0`视为相同的值。如果任一操作数为`NaN`，则返回`false`。
+    - `Boolean`：`true`仅当操作数为两个`true`或两个`false`时才返回`true`。
 
-`===`是严格比较，包括类型和值，即不会进行隐式转换。
+    `===`是严格比较，包括类型和值，即不会进行隐式转换。
 
 39. map和对象的区别
 
-    1. map可以使用任意值为键，对象只可以使用字符串和symbol作键
+    1. map可以使用任意值为键，对象只可以使用字符串和非全局symbol作键
     2. map是一个可迭代对象，而对象不是
     3. 使用方法的区别，map使用set、clear、has等方法，拥有size等属性。
 
 40. 为什么`typeof NaN === 'number'`
 
-`NaN`：not a number
+    `NaN`：not a number
 
-就是计算机科学中数值数据类型的一类型值。
+    就是计算机科学中数值数据类型的一类型值。
 
-如何得到NaN
+    如何得到NaN
 
-    1. 以NaN为操作数
-    2. 0/0的除法
-    3. 负数的平方根
+        1. 以NaN为操作数
+        2. 0/0的除法
+        3. 负数的平方根
 
 
 
-41. Object.prototype.toSring.call()
+41. Object.prototype.toString.call()
 
     能够精准区分数据类型
 
@@ -759,7 +777,7 @@ date: '2025-09-14'
 
       那如果此时有一个黑色对象将一个白色对象引用了呢？
 
-      `强三色不变性`：即一旦有黑色对象引用白色对象，该机制会强制将引用的白色对象改为灰色，从而保证下一次增量 `GC` 标记阶段可以正确标记
+      `强三色不变性`：即一旦有黑色对象引用白色对象，该机制会强制将引用白色对象的对象改为灰色，从而保证下一次增量 `GC` 标记阶段可以正确标记
 
 
 
@@ -967,185 +985,185 @@ date: '2025-09-14'
     // promise
     // async1 end
     ```
+    async 函数执行时，await 前面的同步代码会立即执行。await 后面的代码会被封装成 Promise.then 的回调，进入微任务队列等待执行。
+
 
 56. 块作用域
 
-   块是指被大括号("{}")包裹住的相关联的statements的集合
-
-   比如if语句、for循环语句
+    块是指被大括号("{}")包裹住的相关联的statements的集合，比如if语句、for循环语句
 
 57. for in 、传统 for 循环、forEach 有什么区别
 
-   传统for循环就是根据数组的下标对元素进行一个获取
+    传统for循环就是根据数组的下标对元素进行一个获取
 
-   for in 循环就是迭代对象的`可枚举`属性，包括原型链上的
+    for in 循环就是迭代对象的`可枚举`属性，包括原型链上的
 
-   for of循环在可迭代对象上迭代
+    for of循环在可迭代对象上迭代
 
-   forEach是数组、map等使元素依次执行依次回调函数，且不可使用continue、break等关键字（使用了则直接报错）
+    forEach是数组、map等使元素依次执行依次回调函数，且不可使用continue、break等关键字（使用了则直接报错）
 
 58. super
 
-super关键字将单独出现，并且必须在使用this关键字之前使用
+    super关键字将单独出现，并且必须在使用this关键字之前使用
 
 59. web worker
 
-简单使用
+    简单使用
 
-`worker`中没有`window`对象，取而代之的`self`对象。说明不能直接操作`dom`节点，也不能使用`window`对象的默认方法和属性。
+    `worker`中没有`window`对象，取而代之的`self`对象。说明不能直接操作`dom`节点，也不能使用`window`对象的默认方法和属性。
 
-同时创建worker者可以使用`terminate`方法关闭worker
+    同时创建worker者可以使用`terminate`方法关闭worker
 
-或者worker本身使用close方法进行自关闭
+    或者worker本身使用close方法进行自关闭
 
-```javascript
-// 创建一个worker
-// 指定一个脚本文件执行worker线程
-const worker = new Worker('./21_worker.js')
-setTimeout(() => {
-    worker.postMessage('hello my worker')
-    worker.terminate() // 创建者关闭
-}, 2000)
+    ```javascript
+    // 创建一个worker
+    // 指定一个脚本文件执行worker线程
+    const worker = new Worker('./21_worker.js')
+    setTimeout(() => {
+        worker.postMessage('hello my worker')
+        worker.terminate() // 创建者关闭
+    }, 2000)
 
 
-// worker.js
-onmessage = function(e){
-  console.log('got some info, ' + e.data)
-}
-close() // 自关闭
-```
+    // worker.js
+    onmessage = function(e){
+    console.log('got some info, ' + e.data)
+    }
+    close() // 自关闭
+    ```
 
 60. setTimeout和setInterval
 
-这两个方法的最小调用间隔时间是4ms。所以最小延时是4ms。
+    这两个方法的最小调用间隔时间是4ms。所以最小延时是4ms。
 
-再加之其是加入宏任务队列，可能会产生误差
+    再加之其是加入宏任务队列，可能会产生误差
 
 61. js为什么是单线程的以及其好处
 
-MDN:[在JavaScript语言创建之初，并不流行多处理器的电脑；同时JavaScript也是被设计来做一些较为简单的交互。](https://developer.mozilla.org/zh-CN/docs/Web/API/HTML_DOM_API/Microtask_guide/In_depth#%E4%BB%8B%E7%BB%8D)
+    MDN:[在JavaScript语言创建之初，并不流行多处理器的电脑；同时JavaScript也是被设计来做一些较为简单的交互。](https://developer.mozilla.org/zh-CN/docs/Web/API/HTML_DOM_API/Microtask_guide/In_depth#%E4%BB%8B%E7%BB%8D)
 
-因为js的主要用途是与用户进行一些简单的交互、以及操作Dom。但是如果使用多线程的话，可能会造成复杂的同步问题。比如`多个线程同时操作同一个dom的情况`等复杂的问题。
+    因为js的主要用途是与用户进行一些简单的交互、以及操作Dom。但是如果使用多线程的话，可能会造成复杂的同步问题。比如`多个线程同时操作同一个dom的情况`等复杂的问题。
 
-好处：
+    好处：
 
-- 单线程就一个线程在玩，省去了线程间切换的开销
-- 还有线程同步的问题，线程冲突的问题的也不需要担心
+    - 单线程就一个线程在玩，省去了线程间切换的开销
+    - 还有线程同步的问题，线程冲突的问题的也不需要担心
 
 62. let声明的变量存储在哪里？
 
-存储在一个块级作用域中，并未挂载在Window上
-![image](/js/let作用域.png)
+    存储在一个块级作用域中，并未挂载在Window上
+    ![image](/js/let作用域.png)
 
 63. 浏览器不同标签页面通信？同源、跨域情况下？
 
-同源：
+    同源：
 
-- Broadcast Channel
+    - Broadcast Channel
 
-  ```javascript
-  // 在两个页面同时声明同一个channel
-  const bc = new BroadcastChannel('tqt')
-  // 分别发送和监听事件即可
-  bc.postmessage('hello i am tqt')
-  //另一个页面
-  bc.onmessage = e => { console.log(e.data) } // e.data:hello i am tqt
-  ```
+    ```javascript
+    // 在两个页面同时声明同一个channel
+    const bc = new BroadcastChannel('tqt')
+    // 分别发送和监听事件即可
+    bc.postmessage('hello i am tqt')
+    //另一个页面
+    bc.onmessage = e => { console.log(e.data) } // e.data:hello i am tqt
+    ```
 
-- postmessage
+    - postmessage
 
-  通过window.open打开的窗口可以拿到被打开窗口的window对象。然后可以通过window上的postmessage方法传递消息。
+    通过window.open打开的窗口可以拿到被打开窗口的window对象。然后可以通过window上的postmessage方法传递消息。
 
-  被打开的窗口可以通过onmessage接收消息，并接收到对方的window对象。
+    被打开的窗口可以通过onmessage接收消息，并接收到对方的window对象。
 
-  此时就可以互相发送消息。
+    此时就可以互相发送消息。
 
-非同源：
+    非同源：
 
-- iframe ：使用一个用户不可见的 iframe 作为“桥”。iframe中可以使用`window.parent.postmessage`发送事件，父级中使用`onmessage`进行监听即可。
+    - iframe ：使用一个用户不可见的 iframe 作为“桥”。iframe中可以使用`window.parent.postmessage`发送事件，父级中使用`onmessage`进行监听即可。
 
 64. jsonp详解
 
-`JSONP`为民间提出的一种跨域解决方案，通过客户端的script标签发出的请求方式。
+    `JSONP`为民间提出的一种跨域解决方案，通过客户端的script标签发出的请求方式。
 
-因为同源策略的限制，当客户端向服务器端请求数据后，服务器也会返回数据。但是浏览器在接收到数据之后会检查是否同源，不是会丢弃掉。
+    因为同源策略的限制，当客户端向服务器端请求数据后，服务器也会返回数据。但是浏览器在接收到数据之后会检查是否同源，不是会丢弃掉。
 
-但是`jsonp`通过`script`标签，通过标签发出的请求不会被检查。
+    但是`jsonp`通过`script`标签，通过标签发出的请求不会被检查。
 
-步骤
+    步骤
 
-    1. 客户端首先声明一个接收数据的全局函数
-    2. 客户端解析到外联的`script`标签，发送请求
-    3. 服务器收到请求，返回函数的调用
-    4. 客户端收到数据，执行回调获得数据
+        1. 客户端首先声明一个接收数据的全局函数
+        2. 客户端解析到外联的`script`标签，发送请求
+        3. 服务器收到请求，返回函数的调用
+        4. 客户端收到数据，执行回调获得数据
 
-jsonp是一个同步请求，不存在同源检查，且只支持get请求。
+    jsonp是一个同步请求，不存在同源检查，且只支持get请求。
 
 65. 同源策略的意义
 
-是一个重要的安全策略，它用于限制一个`origin`的文档或者它加载的脚本如i何能与另一个源的资源进行交互。它能帮助阻隔恶意文档，减少可能被攻击的媒介。如果没有同源策略，任意的脚本都可能与其他的网站交互，获取到其他网站的信息（document.cookie等）或者是修改其他网站的dom结构（比如输入框的结构），是非常危险的。
+    是一个重要的安全策略，它用于限制一个`origin`的文档或者它加载的脚本如何能与另一个源的资源进行交互。它能帮助阻隔恶意文档，减少可能被攻击的媒介。如果没有同源策略，任意的脚本都可能与其他的网站交互，获取到其他网站的信息（document.cookie等）或者是修改其他网站的dom结构（比如输入框的结构），是非常危险的。
 
-维基百科上最重要的一点便是  cookie 信息，因为现在的 web 应用广泛使用 cookie 存储用户的信息、校验信息等。
+    维基百科上最重要的一点便是  cookie 信息，因为现在的 web 应用广泛使用 cookie 存储用户的信息、校验信息等。
 
-比如：如果iframe能够跨域。嵌套一个iframe指向一个银行网站，如果没有跨域。那么用户的访问和操作，除了域名，其他的部分没有任何区别，用户的安全也得不到保证。
+    比如：如果iframe能够跨域。嵌套一个iframe指向一个银行网站，如果没有跨域。那么用户的访问和操作，除了域名，其他的部分没有任何区别，用户的安全也得不到保证。
 
 66. 箭头函数中的this为什么这么设计？
 
-就是为了直接能够获得外部函数的this。而不需要写
+    就是为了直接能够获得外部函数的this。而不需要写
 
-类似这样的代码  ``_self = this``
+    类似这样的代码  ``_self = this``
 
 67. symbol（如何叙述？功能？）
 
-   es7新增，是基本的数据类型
+    es7新增，是基本的数据类型
 
-   表示一个唯一的标识符，即使我们创建了具有相同描述的symbol，它们的值也是不同的。
+    表示一个唯一的标识符，即使我们创建了具有相同描述的symbol，它们的值也是不同的。
 
-   同时它可以用作对象的键，它是不可以被迭代到的。
+    同时它可以用作对象的键，它是不可以被迭代到的。
 
 68. class 中的extends继承
 
-   底层仍然是寄生组合式继承
+    底层仍然是寄生组合式继承
 
 69. null和undefined的区别
 
-首先，null和undefined都是js的基本数据类型。
+    首先，null和undefined都是js的基本数据类型。
 
-null是一个字面量，它代表当前变量未指向任何值，可以理解为尚未创建的对象。
+    null是一个字面量，它代表当前变量未指向任何值，可以理解为尚未创建的对象。
 
-undefined是一个全局对象的属性，指当前变量还未定义
+    undefined是一个全局对象的属性，指当前变量还未定义
 
-怎么区分？
+    怎么区分？
 
-使用`typeof`区分
+    使用`typeof`区分
 
-`Object.prototype.toString.call()`
+    `Object.prototype.toString.call()`
 
 70. let和const 声明的变量存放在哪里？
 
-  ```html
-  <script>
+    ```html
+    <script>
     var a = 1;
     let b = 2;
     const c = 3;
     console.dir(new (function foo() {})());
-  </script>
+    </script>
 
-  ```
-  运行结果：
+    ```
+    运行结果：
 
-  ![let-const](/js/let-const.png)
+    ![let-const](/js/let-const.png)
 
-  可见使用 `let` 和 `const` 声明的变量是存放在了一个单独的作用域 `script` 中，也没有挂载在 `global` 上。
+    可见使用 `let` 和 `const` 声明的变量是存放在了一个单独的作用域 `script` 中，也没有挂载在 `global` 上。
 
-  GlobalEnv是一个复合环境，包括一个由global构成的对象环境(objEnv)和一个一般声明的环境(declsEnv)组合而成，它是双环境组成的，统一交付一个环境存取的界面（objEnv/declsEnv 对应 Global/Script)
+    GlobalEnv是一个复合环境，包括一个由global构成的对象环境(objEnv)和一个一般声明的环境(declsEnv)组合而成，它是双环境组成的，统一交付一个环境存取的界面（objEnv/declsEnv 对应 Global/Script)
 
-  let/const 声明会放在declsEnv里面，而var的变量会通过ObjEnv来声明, 所以显而易见说明，let,const 声明的变量不在window对象
+    let/const 声明会放在declsEnv里面，而var的变量会通过ObjEnv来声明, 所以显而易见说明，let,const 声明的变量不在window对象
 
 
 71. Number.MAX_SAFE_INTEGER
 
-  MAX_SAFE_INTEGER 是一个值为 9007199254740991 的常量。因为 Javascript 的数字存储使用了 IEEE 754 中规定的双精度浮点数数据类型，而这一数据类型能够安全存储 -(2^53 - 1) 到 2^53 - 1 之间的数值（包含边界值）。
+    MAX_SAFE_INTEGER 是一个值为 9007199254740991 的常量。因为 Javascript 的数字存储使用了 IEEE 754 中规定的双精度浮点数数据类型，而这一数据类型能够安全存储 -(2^53 - 1) 到 2^53 - 1 之间的数值（包含边界值）。
 
 72. 一个web 音乐的 app 打开了多个页面。用户点击的播放按钮可能是任意一个打开的页面的
 
@@ -1191,10 +1209,10 @@ undefined是一个全局对象的属性，指当前变量还未定义
     let str = "";
 
     async function generate() {
-    for await (const val of foo()) {
-        str = str + val;
-    }
-    console.log(str);
+        for await (const val of foo()) {
+            str = str + val;
+        }
+        console.log(str);
     }
 
     generate();

@@ -332,7 +332,26 @@ console.log(test.getName()); // Tuesday
 
    而`undefined`是`void`的子类，可以赋值。
 
+    > 协变和逆变描述的是不同类型之间的赋值关系。假设 Dog 是 Animal 的子类型，那么协变保持原来的子父类型方向，也就是 Dog → Animal；逆变则反过来，也就是 Animal → Dog。在 TypeScript 中，函数的返回值通常是协变的，因为返回一个更具体的 Dog，可以当成 Animal 使用；函数参数则是逆变的，因为一个能够处理任意Animal 的函数，也一定能够处理 Dog，反过来则不安全。
 
+    所以面试中可以简单记成：函数参数逆变，返回值协变。
+
+    一张图记住
+                    Dog extends Animal
+                        │
+                ┌────────┴────────┐
+                ↓                 ↓
+            返回值             参数
+                │                 │
+                协变              逆变
+                │                 │
+            Dog → Animal      Animal → Dog
+
+    最重要的一句话：
+
+    看函数类型时，“参数逆，返回协”。
+
+    如果你接下来要继续深入，面试里通常会从这里追问到 strictFunctionTypes、type/interface 的函数参数检查、泛型中的 in/out、以及为什么 Array<T> 会协变而函数参数会逆变。
 
 **不变**
 

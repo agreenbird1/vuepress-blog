@@ -18,17 +18,21 @@ instanceOf 实现方式
 	再根据原型的关系得出结论 ===> 实例的`__proto__`属性指向构造函数的原型
 	并且只要子对象原型链上有一个符合即可
 */
-function instanceOfFn(child, parent) {
-    let proto = child.__proto__
-    let prototype = parent.prototype
-    while (true) {
-        if (proto === null) {
-            return false
-        } else {
-            if (proto === prototype) return true
+function myInstanceof(obj, constructorFn) {
+    if (obj == null) return false
+
+    let proto = Object.getPrototypeOf(obj)
+    const prototype = constructorFn.prototype
+
+    while (proto !== null) {
+        if (proto === prototype) {
+            return true
         }
-        proto = proto.__proto__
+
+        proto = Object.getPrototypeOf(proto)
     }
+
+    return false
 }
 ```
 
