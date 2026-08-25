@@ -70,10 +70,6 @@ convertToJson();
 ```
 
 ```js
-
-```
-
-```js
 // 展开数组
 // 会跳过稀疏数组空槽
 const flatArray = (array, depth = 1) => {
